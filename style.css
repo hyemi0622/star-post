@@ -90,7 +90,7 @@ h1{position:absolute;left:0;right:0;top:calc(var(--hs)*.348);font-weight:800;fon
 /* 엽서 */
 #postcard{background:#fff;color:#272727;text-align:center}
 #postcard .scroll{position:absolute;inset:0}
-#pcCanvas{position:absolute;left:50%;top:calc(var(--hs)*.12);height:min(470px,calc(var(--hs)*.6));width:auto;transform:translateX(-50%);touch-action:none}
+#pcCanvas{position:absolute;left:50%;top:calc(var(--hs)*.165);height:min(470px,calc(var(--hs)*.6));width:auto;transform:translateX(-50%);touch-action:none}
 .pc-hint{display:none;font-size:12px;font-weight:500;line-height:25px;color:#6d6d6d}
 .pc-hint2{position:absolute;left:0;right:0;top:calc(var(--hs)*.881 - 32px);font-size:12px;font-weight:500;line-height:25px;letter-spacing:-.4px;color:#6d6d6d}
 #pcSave{top:calc(var(--hs)*.881)}

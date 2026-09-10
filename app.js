@@ -1,5 +1,5 @@
 /* 자동 업데이트: 배포된 버전이 다르면 캐시 무시하고 새로 불러옴 */
-const VER='20';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
+const VER='21';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
 /* STAR POST */
 const $=s=>document.querySelector(s);
 const R=Math.PI/180,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
