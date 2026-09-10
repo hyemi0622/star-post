@@ -1,10 +1,10 @@
 /* 자동 업데이트: 배포된 버전이 다르면 캐시 무시하고 새로 불러옴 */
-const VER='23';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
+const VER='24';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
 /* STAR POST */
 const $=s=>document.querySelector(s);
 const R=Math.PI/180,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const store={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
-const S={lat:37.5665,lon:126.978,place:'',placeEn:'',mode:'wait',off:0,az:0,alt:40,cur:null,stamps:store.get('sp_stamps2',[]),camOn:false,fov:64,cap:1};
+const S={lat:37.5665,lon:126.978,place:'',placeEn:'',mode:'wait',off:0,az:0,alt:40,cur:null,stamps:store.get('sp_stamps2',[]),camOn:false,fov:store.get('sp_fov',66),cap:1};
 const IMG={};['stamp','seal','postcard','stampbtn'].forEach(k=>{const i=new Image();i.src=`img/${k}.${k==='postcard'?'jpg':'png'}`;IMG[k]=i});
 
 /* ---- 카카오톡 인앱 확대 방지 ---- */
@@ -65,7 +65,8 @@ function smoothR(){for(let i=0;i<9;i++)Rs[i]+=(Rt[i]-Rs[i])*.1;const c=[[Rs[0],R
  sky.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){e.preventDefault();const q=pinch.d/dist(e.touches);if(!$('#machine').hidden)setCap(pinch.c*q);else setFov(pinch.f*q)}},{passive:false});
  sky.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null});
  sky.addEventListener('wheel',e=>{e.preventDefault();const q=1+e.deltaY*.002;if(!$('#machine').hidden)setCap(S.cap*q);else setFov(S.fov*q)},{passive:false})})();
-function setFov(f){S.fov=clamp(f,18,64);F=(H/2)/Math.tan(S.fov/2*R);const z=Math.tan(32*R)/Math.tan(S.fov/2*R);$('#cam').style.transform=`scale(${z.toFixed(3)})`}
+/* 핀치(하늘 화면) = 별 간격 보정: 카메라는 그대로, 별 투영 시야각만 바꿈 (저장됨) */
+function setFov(f){S.fov=clamp(f,40,100);F=(H/2)/Math.tan(S.fov/2*R);store.set('sp_fov',S.fov)}
 /* 기계 창 안에서만 축소(카메라 화면은 그대로, 창에 더 넓은 영역을 담음) */
 function capMax(){const r=holeRect();return Math.max(1,Math.min(W/r.width,H/r.height))}
 function setCap(v){S.cap=clamp(v,1,capMax())}
@@ -84,7 +85,7 @@ function frame(ts){if(!$('#sky').classList.contains('show')){requestAnimationFra
  if(best!==S.cur){S.cur=best;showCon(best)}
  g.globalCompositeOperation='lighter';for(const s of STARS){if(s.v[2]<-.02)continue;const p=proj(s.v);if(!p||p[0]<-10||p[0]>W+10||p[1]<-10||p[1]>H+10)continue;drawStar(g,p[0],p[1],s.mag,s.ci,t,s.ph)}g.globalCompositeOperation='source-over';g.globalAlpha=1;
  const cxw=-Rs[2],cyw=-Rs[5],czw=-Rs[8],az=(Math.atan2(cxw,cyw)/R+360)%360,alt=Math.asin(clamp(czw,-1,1))/R;
- if((fc++)%12===0)$('#hudDir').textContent=`${DIRS[Math.round(az/45)%8]} ${az.toFixed(0)}° · 고도 ${alt.toFixed(0)}°${S.mode==='manual'?' · 수동':''}${S.fov!==64?` · ${(64/S.fov).toFixed(1)}x`:''}`;
+ if((fc++)%12===0)$('#hudDir').textContent=`${DIRS[Math.round(az/45)%8]} ${az.toFixed(0)}° · 고도 ${alt.toFixed(0)}°${S.mode==='manual'?' · 수동':''}${Math.abs(S.fov-66)>.5?` · 시야 ${S.fov.toFixed(0)}°`:''}`;
  if(!$('#machine').hidden)drawPreview();
  requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
@@ -111,7 +112,7 @@ $('#pressBtn').onclick=()=>{const m=$('#machine');m.classList.add('press');m.cla
 /* 창 영역(cap 배 확대 영역)의 카메라+별 합성 */
 function drawComposite(o,Wi,Hi){const h=holeRect(),f=S.cap,cx=h.left+h.width/2,cy=h.top+h.height/2,r={left:cx-h.width*f/2,top:cy-h.height*f/2,width:h.width*f,height:h.height*f};
  const gr=o.createLinearGradient(0,0,0,Hi);gr.addColorStop(0,'#070b1e');gr.addColorStop(1,'#182450');o.fillStyle=gr;o.fillRect(0,0,Wi,Hi);
- if(S.camOn){try{const v=$('#cam'),vw=v.videoWidth,vh=v.videoHeight;if(vw){const z=Math.tan(32*R)/Math.tan(S.fov/2*R),sc=Math.max(W/vw,H/vh)*z,sx=(r.left-W/2)/sc+vw/2,sy=(r.top-H/2)/sc+vh/2,sw=r.width/sc,sh=r.height/sc;const x0=Math.max(0,sx),y0=Math.max(0,sy),x1=Math.min(vw,sx+sw),y1=Math.min(vh,sy+sh);if(x1>x0&&y1>y0)o.drawImage(v,x0,y0,x1-x0,y1-y0,(x0-sx)/sw*Wi,(y0-sy)/sh*Hi,(x1-x0)/sw*Wi,(y1-y0)/sh*Hi)}}catch(e){}}
+ if(S.camOn){try{const v=$('#cam'),vw=v.videoWidth,vh=v.videoHeight;if(vw){const sc=Math.max(W/vw,H/vh),sx=(r.left-W/2)/sc+vw/2,sy=(r.top-H/2)/sc+vh/2,sw=r.width/sc,sh=r.height/sc;const x0=Math.max(0,sx),y0=Math.max(0,sy),x1=Math.min(vw,sx+sw),y1=Math.min(vh,sy+sh);if(x1>x0&&y1>y0)o.drawImage(v,x0,y0,x1-x0,y1-y0,(x0-sx)/sw*Wi,(y0-sy)/sh*Hi,(x1-x0)/sw*Wi,(y1-y0)/sh*Hi)}}catch(e){}}
  const sx=r.left*dpr,sy=r.top*dpr,sw=r.width*dpr,sh=r.height*dpr,x0=Math.max(0,sx),y0=Math.max(0,sy),x1=Math.min(cv.width,sx+sw),y1=Math.min(cv.height,sy+sh);if(x1>x0&&y1>y0)o.drawImage(cv,x0,y0,x1-x0,y1-y0,(x0-sx)/sw*Wi,(y0-sy)/sh*Hi,(x1-x0)/sw*Wi,(y1-y0)/sh*Hi);return r}
 const mpv=$('#mPrev'),mpg=mpv.getContext('2d');
 function drawPreview(){const h=holeRect(),pw=Math.round(h.width*dpr),ph=Math.round(h.height*dpr);if(mpv.width!==pw||mpv.height!==ph){mpv.width=pw;mpv.height=ph}drawComposite(mpg,pw,ph)}
