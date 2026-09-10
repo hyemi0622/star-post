@@ -19,8 +19,9 @@ input{font-size:16px;-webkit-user-select:text;user-select:text}
 .btn{position:absolute;left:21px;right:21px;height:48px;border-radius:12px;font-weight:600;font-size:16px}
 .btn.white{background:#fff;color:#101a26;box-shadow:0 2px 10px rgba(0,0,0,.25)}
 .btn.dark{background:#272727;color:#fff}
-.back{position:absolute;top:10px;left:12px;width:40px;height:40px;font-size:22px;color:#272727;z-index:5}
-.back.light{color:#fff}
+.back{position:absolute;top:10px;left:12px;width:44px;height:44px;z-index:5}
+.back::before{content:"";position:absolute;left:18px;top:15px;width:12px;height:12px;border-left:2.5px solid #272727;border-bottom:2.5px solid #272727;transform:rotate(45deg)}
+.back.light::before{border-color:#fff}
 .pill{position:absolute;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.3);border:1px solid #aeaeae;border-radius:999px;height:25px;line-height:23px;padding:0 15px;font-size:12px;font-weight:500;color:#fff;white-space:nowrap}
 .pill.dark{background:#fff;color:#272727;border-color:#fff}
 
@@ -89,7 +90,7 @@ h1{position:absolute;left:0;right:0;top:calc(var(--hs)*.348);font-weight:800;fon
 /* 엽서 */
 #postcard{background:#fff;color:#272727;text-align:center}
 #postcard .scroll{position:absolute;inset:0}
-#pcCanvas{position:absolute;left:50%;top:calc(var(--hs)*.152);height:min(449px,calc(var(--hs)*.532));width:auto;transform:translateX(-50%);touch-action:none}
+#pcCanvas{position:absolute;left:50%;top:calc(var(--hs)*.12);height:min(470px,calc(var(--hs)*.6));width:auto;transform:translateX(-50%);touch-action:none}
 .pc-hint{display:none;font-size:12px;font-weight:500;line-height:25px;color:#6d6d6d}
 .pc-hint2{position:absolute;left:0;right:0;top:calc(var(--hs)*.881 - 32px);font-size:12px;font-weight:500;line-height:25px;letter-spacing:-.4px;color:#6d6d6d}
 #pcSave{top:calc(var(--hs)*.881)}

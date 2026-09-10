@@ -1,5 +1,5 @@
 /* 자동 업데이트: 배포된 버전이 다르면 캐시 무시하고 새로 불러옴 */
-const VER='18';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
+const VER='19';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
 /* STAR POST */
 const $=s=>document.querySelector(s);
 const R=Math.PI/180,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -13,12 +13,12 @@ document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false})
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 let lastT=0;document.addEventListener('touchend',e=>{const t=Date.now();if(t-lastT<300&&!e.target.closest('input'))e.preventDefault();lastT=t},{passive:false});
 let HS=844,K=1,mSc=1,mTop=166;
-function setScale(){const w=window.visualViewport?.width||document.documentElement.clientWidth||innerWidth,vh=window.visualViewport?.height||innerHeight;K=Math.min(1.25,w/390);HS=vh/K;const app=document.getElementById('app');app.style.setProperty('--k',K.toFixed(4));app.style.setProperty('--hs',Math.ceil(HS)+'px');layoutMachine()}
+function setScale(){if(document.activeElement&&document.activeElement.matches('input,textarea'))return;const w=window.visualViewport?.width||document.documentElement.clientWidth||innerWidth,vh=window.visualViewport?.height||innerHeight;K=Math.min(1.25,w/390);HS=vh/K;const app=document.getElementById('app');app.style.setProperty('--k',K.toFixed(4));app.style.setProperty('--hs',Math.ceil(HS)+'px');layoutMachine()}
 function resetZoom(){const vv=window.visualViewport;if(vv&&vv.scale>1.01){const m=document.querySelector('meta[name=viewport]'),o=m.content;m.content=o+', maximum-scale=1.0';setTimeout(()=>m.content=o,60)}}
 /* zoom 적용 요소의 화면 좌표 (브라우저별 getBoundingClientRect 차이 보정) */
 function vrect(el){const r=el.getBoundingClientRect(),st=el.closest('.stage').getBoundingClientRect(),z=Math.abs(st.width-390)<1&&K!==1?K:1;return{left:r.left*z,top:r.top*z,width:r.width*z,height:r.height*z}}
 function layoutMachine(){const m=document.getElementById('machine'),sky=document.getElementById('sky');if(!m)return;let top=166,sc=1,short=false;const cardTop=HS-197;if(top+404>cardTop){top=Math.max(96,cardTop-404);if(top+404>cardTop){short=true;top=96;sc=Math.min(1,(HS-80-8-top)/404)}}m.style.top=top+'px';m.style.transform=`scale(${sc.toFixed(3)})`;mSc=sc;mTop=top;sky.classList.toggle('mshort',short)}
-setScale();[50,150,400,800,1500,3000].forEach(t=>setTimeout(setScale,t));addEventListener('resize',setScale);addEventListener('orientationchange',()=>setTimeout(setScale,250));addEventListener('pageshow',setScale);addEventListener('load',setScale);window.visualViewport?.addEventListener('resize',setScale);window.visualViewport?.addEventListener('scroll',resetZoom);
+setScale();[50,150,400,800,1500,3000].forEach(t=>setTimeout(setScale,t));document.addEventListener('focusout',()=>setTimeout(setScale,250));addEventListener('resize',setScale);addEventListener('orientationchange',()=>setTimeout(setScale,250));addEventListener('pageshow',setScale);addEventListener('load',setScale);window.visualViewport?.addEventListener('resize',setScale);window.visualViewport?.addEventListener('scroll',resetZoom);
 document.addEventListener('touchmove',e=>{if(e.touches.length>1&&!e.target.closest('#sky'))e.preventDefault()},{passive:false});
 /* 기계 창(구멍) 위치: 296x396 기준 */
 const HOLE={x:95.5,y:117.75,w:110.5,h:162.75};
