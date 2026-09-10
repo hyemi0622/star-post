@@ -1,12 +1,14 @@
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;height:100%}
-body{height:100%;overflow:hidden;background:#0a1226;color:#fff;font-family:Inter,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,system-ui,sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
+body{height:100%;overflow:hidden;-webkit-touch-callout:none;background:#0a1226;color:#fff;font-family:Inter,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,system-ui,sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
 button,input{font:inherit;color:inherit;border:0;background:none;outline:0;-webkit-appearance:none;border-radius:0}
 input{font-size:16px;-webkit-user-select:text;user-select:text}
 [hidden]{display:none!important}
 :root{--sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom)}
-#app{position:fixed;inset:0;overflow:hidden;--s:1;--hs:844px}
-.stage{position:absolute;left:50%;top:0;width:390px;height:var(--hs);margin-left:-195px;transform:scale(var(--s));transform-origin:top center;pointer-events:none}
+#app{position:fixed;inset:0;overflow:hidden;--k:1;--hs:844px}
+/* 무대: 390px 고정 레이아웃을 zoom 으로 통째 축소/확대 (transform 은 레이아웃 폭이 남아 카톡 웹뷰가 글자를 키움) */
+.stage{position:absolute;left:0;right:0;top:0;bottom:0;margin:0 auto;width:390px;height:var(--hs);zoom:var(--k);pointer-events:none}
+@supports not (zoom:1){.stage{zoom:normal;left:50%;right:auto;margin-left:-195px;transform:scale(var(--k));transform-origin:top center}}
 .spacer{flex:1}
 .stage>*{pointer-events:auto}
 .stage .hint,.stage .con-info{pointer-events:none}
@@ -61,11 +63,12 @@ h1{position:absolute;left:0;right:0;top:calc(var(--hs)*.348);font-weight:800;fon
 #machine{position:absolute;left:47px;top:166px;width:296px;height:396px;z-index:10;transform-origin:top center}
 #sky.mshort.mopen .stamp-btn,#sky.mshort.mopen .post-card{display:none}
 #sky.mshort.mopen .con-info{bottom:13px}
-.zbtn{position:absolute;top:178px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);color:#272727;font-size:24px;line-height:40px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.zbtn{position:absolute;top:178px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);color:#272727;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;padding-bottom:3px;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:4}
 #zOut{left:-46px}#zIn{right:-46px}
-#machine img{width:296px;height:396px;display:block;pointer-events:none;transition:transform .12s}
+#machine img{width:296px;height:396px;display:block;pointer-events:none;transition:transform .12s;position:relative;z-index:2}
+#mPrev{position:absolute;left:95.5px;top:117.75px;width:110.5px;height:162.75px;z-index:1;background:#070b1e}
 #machine.press img{transform:scale(.97) translateY(4px)}
-#machine.flash::after{content:"";position:absolute;left:95.5px;top:117.75px;border-radius:6px;width:110.5px;height:162.75px;background:#fff;animation:fl .45s ease-out forwards;pointer-events:none}
+#machine.flash::after{content:"";position:absolute;left:95.5px;top:117.75px;z-index:3;border-radius:6px;width:110.5px;height:162.75px;background:#fff;animation:fl .45s ease-out forwards;pointer-events:none}
 @keyframes fl{0%{opacity:.95}100%{opacity:0}}
 #pressBtn{position:absolute;left:104px;top:322px;width:88px;height:36px;border-radius:18px}
 #pressBtn:active{background:rgba(0,0,0,.06)}
