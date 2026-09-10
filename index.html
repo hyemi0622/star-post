@@ -15,18 +15,19 @@
 <body>
 <div id="app">
 
-<section id="onboard" class="screen show">
+<section id="onboard" class="screen show"><div class="stage">
   <h1>★ STAR POST ★</h1>
   <p class="ob-desc">도시의 밤에도 하늘엔 별이 있어요.<br>핸드폰을 하늘로 들어 올리면 지금 그 자리에<br>숨어있는 별들이 보여요.<br><br>오늘 밤, 자신의 별자리도 찾아보아요.</p>
   <a id="kakaoOut" class="kakao-out" hidden>카카오톡에서는 카메라·센서가 제한돼요. 외부 브라우저로 열기 →</a>
   <button id="startBtn" class="btn white">하늘 보러 가기</button>
   <p class="ob-hint">위치 · 방향 센서 권한을 허용해 주세요.</p>
-</section>
+</div></section>
 
 <section id="sky" class="screen">
   <video id="cam" autoplay muted playsinline></video>
   <div id="skyBg"></div><div id="tint"></div>
   <canvas id="stars"></canvas>
+  <div class="stage">
   <div class="pill" id="hudPlace">위치 찾는 중…</div>
   <div class="pill" id="hudDir">--</div>
   <button class="pill dark" id="sensorBtn" hidden>방향 센서 켜기</button>
@@ -45,9 +46,10 @@
     <div id="miniStamps"></div>
     <span class="chev"></span>
   </button>
+  </div>
 </section>
 
-<div id="naming" class="overlay">
+<div id="naming" class="overlay"><div class="stage">
   <button class="back" id="nClose">←</button>
   <img id="nImg" alt="우표">
   <img id="nSeal" src="img/seal.png" alt="">
@@ -56,9 +58,9 @@
   <div class="n-date" id="nDate"></div>
   <p class="n-hint">소중한 사람이나 자신의 별자리에 이름을 적어보세요.</p>
   <button id="nSave" class="btn dark">확인</button>
-</div>
+</div></div>
 
-<section id="postcard" class="screen">
+<section id="postcard" class="screen"><div class="stage">
   <button class="back" id="pcBack">←</button>
   <canvas id="pcCanvas"></canvas>
   <p class="pc-hint2">엽서를 누르면 글을 쓰고, 우표를 누르면 옮기거나 지울 수 있어요</p>
@@ -70,7 +72,7 @@
     <label><span>한마디</span><input id="pcMsg" type="text" placeholder="그날의 하늘을 적어 보세요" maxlength="50"></label>
     <button id="sheetDone" class="btn dark">완료</button>
   </div>
-</section>
+</div></section>
 
 <div id="preview" class="overlay">
   <button class="back light" id="pvClose">←</button>

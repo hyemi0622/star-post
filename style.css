@@ -4,7 +4,10 @@ body{height:100%;overflow:hidden;background:#0a1226;color:#fff;font-family:Inter
 button,input{font:inherit;color:inherit;border:0;background:none;outline:0;-webkit-appearance:none;border-radius:0}
 input{font-size:16px;-webkit-user-select:text;user-select:text}
 [hidden]{display:none!important}
-#app{position:fixed;inset:0;overflow:hidden}
+#app{position:fixed;inset:0;overflow:hidden;--s:1}
+.stage{position:absolute;left:50%;top:0;width:390px;margin-left:-195px;height:calc(100% / var(--s));transform:scale(var(--s));transform-origin:top center;pointer-events:none}
+.stage>*{pointer-events:auto}
+.stage .hint,.stage .con-info,.stage .m-guide{pointer-events:none}
 .screen{position:absolute;inset:0;display:none}
 .screen.show{display:block}
 .overlay{position:absolute;inset:0;display:none;z-index:20;background:#fff}
@@ -45,7 +48,7 @@ h1{position:absolute;left:0;right:0;top:calc(35% - 6px);font-weight:800;font-siz
 .con-id{font-size:12px;font-weight:500;color:#e0e0e0;margin-left:9px}
 .con-desc{font-size:12px;font-weight:500;line-height:25px;color:#eaeaea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stamp-btn{position:absolute;left:17px;bottom:calc(env(safe-area-inset-bottom) + 13px);width:80px;height:106px;background:url(img/stampbtn.png) center/100% 100% no-repeat;color:#959595;font-size:12px;font-weight:500;line-height:20px;padding-top:2px}
-.post-card{position:absolute;left:108px;right:21px;bottom:calc(env(safe-area-inset-bottom) + 17px);height:97px;background:#f3f3f3;border-radius:10px;text-align:left;overflow:hidden}
+.post-card{position:absolute;left:108px;width:261px;bottom:calc(env(safe-area-inset-bottom) + 17px);height:97px;background:#f3f3f3;border-radius:10px;text-align:left;overflow:hidden}
 .pc-label{position:absolute;left:12px;top:5px;font-size:12px;font-weight:600;color:#505050;line-height:25px}
 .seal-mini{position:absolute;left:9px;top:24px;width:58px;height:57px;transform:rotate(7.89deg)}
 #miniStamps img{position:absolute;width:40.3px;height:58.6px}

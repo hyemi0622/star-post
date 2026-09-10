@@ -11,6 +11,7 @@ document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false})
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 let lastT=0;document.addEventListener('touchend',e=>{const t=Date.now();if(t-lastT<300&&!e.target.closest('input'))e.preventDefault();lastT=t},{passive:false});
 if(/KAKAOTALK/i.test(navigator.userAgent)){const a=$('#kakaoOut');a.hidden=false;a.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href)}
+function setScale(){document.getElementById('app').style.setProperty('--s',Math.min(1,innerWidth/390).toFixed(4))}setScale();addEventListener('resize',setScale);
 /* 기계 창(구멍) 위치: 296x396 기준 */
 const HOLE={x:95.5,y:117.75,w:110.5,h:162.75};
 function holeRect(){const b=$('#machine img').getBoundingClientRect(),s=b.width/296;return{left:b.left+HOLE.x*s,top:b.top+HOLE.y*s,width:HOLE.w*s,height:HOLE.h*s}}
@@ -84,7 +85,7 @@ $('#startBtn').onclick=async()=>{await askSensor();startCam();$('#onboard').clas
  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{S.lat=p.coords.latitude;S.lon=p.coords.longitude;lastAstro=0;geocode()},()=>{S.place='서울';S.placeEn='Seoul';$('#hudPlace').textContent='위치 없음 · 서울 기준'},{timeout:8000,maximumAge:6e5});else geocode()};
 
 /* ---- 스탬프 기계 & 우표 생성 ---- */
-$('#stampBtn').onclick=()=>{if(S.stamps.length>=6)return alert('엽서에는 우표를 6장까지 붙일 수 있어요. 엽서에서 우표를 떼어 주세요.');$('#machine').hidden=false};
+$('#stampBtn').onclick=()=>{if(S.stamps.length>=6)return alert('엽서에는 우표를 6장까지 붙일 수 있어요. 엽서에서 우표를 떼어 주세요.');$('#machine').hidden=false;$('#hint').classList.add('off')};
 $('#mClose').onclick=()=>{$('#machine').hidden=true};
 let pending=null;
 const enDate=d=>new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
@@ -102,7 +103,7 @@ $('#nClose').onclick=()=>$('#naming').classList.remove('show');
 $('#nSave').onclick=()=>{if(!pending)return;pending.name=$('#nName').value.trim()||pending.ko;const sl=SLOTS[S.stamps.length]||SLOTS[5];pending.x=sl[0];pending.y=sl[1];pending.rot=sl[2];S.stamps.push(pending);if(!store.set('sp_stamps2',S.stamps))alert('저장 공간이 가득 찼어요. 엽서를 이미지로 저장한 뒤 우표를 몇 개 떼어 주세요.');pending=null;$('#naming').classList.remove('show');renderMini();openPost()};
 
 /* 엽서 만들기 카드의 미니 우표 (시안 좌표: 카드 기준 108,730) */
-const MINI=[[229,756.1,-1.39],[256.57,743,1.71],[287.59,745.79,16.49],[271.24,758.01,-1.85],[205,743.62,9.61],[186,748.42,9.61]];
+const MINI=[[186,748.42,9.61],[205,743.62,9.61],[229,756.1,-1.39],[256.57,743,1.71],[271.24,758.01,-1.85],[287.59,745.79,16.49]];
 function renderMini(){const box=$('#miniStamps');box.innerHTML='';MINI.forEach((m,i)=>{const s=S.stamps[i];if(!s)return;const im=new Image();im.src=s.img;im.style.cssText=`left:${m[0]-108}px;top:${m[1]-730}px;transform:rotate(${m[2]}deg)`;box.appendChild(im)})}
 
 /* ---- 엽서 (캔버스, 300x449 시안 좌표) ---- */
