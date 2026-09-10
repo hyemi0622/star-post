@@ -1,5 +1,5 @@
 /* 자동 업데이트: 배포된 버전이 다르면 캐시 무시하고 새로 불러옴 */
-const VER='19';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
+const VER='20';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
 /* STAR POST */
 const $=s=>document.querySelector(s);
 const R=Math.PI/180,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -149,8 +149,8 @@ function renderCard(exp){const k=3,CW=300,CH=449;pcc.width=CW*k;pcc.height=CH*k;
  if(IMG.postcard.complete&&IMG.postcard.naturalWidth)o.drawImage(IMG.postcard,0,0,CW,CH);else{o.fillStyle='#d9cbaa';o.fillRect(0,0,CW,CH);IMG.postcard.onload=()=>renderCard()}
  const ink='#1f2a44';
  const w=$('#pcWith').value.trim();if(w)vtext(o,w,30,56,`500 11px ${GO}`,ink,64);
- const lines=wrap(o,$('#pcMsg').value,`11px ${GO}`,140,3);lines.forEach((t,i)=>vtext(o,t,91.5+i*25,260,`11px ${GO}`,ink));
- const at=$('#pcWhere').value.trim(),on=dateText();vtext(o,`at ${at||'-'}  ·  on ${on}`,166.5,260,`9px ${GO}`,ink,140);
+ const lines=wrap(o,$('#pcMsg').value,`11px ${GO}`,140,3);lines.forEach((t,i)=>vtext(o,t,166.5-i*25,260,`11px ${GO}`,ink));
+ const at=$('#pcWhere').value.trim(),on=dateText();vtext(o,`at ${at||'-'}  ·  on ${on}`,91.5,260,`9px ${GO}`,ink,140);
  if(S.stamps.length&&IMG.seal.complete){o.save();o.globalAlpha=.9;o.translate(249.5,401);o.rotate(8*R);o.drawImage(IMG.seal,-26,-26,52,51);o.restore()}
  S.stamps.forEach((s,i)=>{const im=getImg(s.img),c=s.sc||1;if(!(im.complete&&im.naturalWidth))return;o.save();o.translate(s.x,s.y);o.rotate(s.rot*R);o.shadowColor='rgba(0,0,0,.25)';o.shadowBlur=3;o.shadowOffsetY=1;o.drawImage(im,-29*c,-42*c,58*c,84*c);o.restore();
   if(!exp&&i===selIdx){const hw=44*c,hh=31*c;o.save();o.strokeStyle='rgba(39,39,39,.9)';o.lineWidth=1;o.setLineDash([3,2]);o.strokeRect(s.x-hw,s.y-hh,hw*2,hh*2);o.setLineDash([]);

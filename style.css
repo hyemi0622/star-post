@@ -1,6 +1,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
-body{overflow:hidden;-webkit-touch-callout:none;background:#0a1226;color:#fff;font-family:Inter,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,system-ui,sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
+body{overflow:hidden;-webkit-touch-callout:none;background:#0a1226 url(img/bg.jpg) center center/cover no-repeat fixed;background:#0a1226;color:#fff;font-family:Inter,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,system-ui,sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
 button,input{font:inherit;color:inherit;border:0;background:none;outline:0;-webkit-appearance:none;border-radius:0}
 input{font-size:16px;-webkit-user-select:text;user-select:text}
 [hidden]{display:none!important}
@@ -26,7 +26,7 @@ input{font-size:16px;-webkit-user-select:text;user-select:text}
 .pill.dark{background:#fff;color:#272727;border-color:#fff}
 
 /* 온보딩 */
-#onboard{background:#0a1226 url(img/bg.jpg) center/cover;text-align:center}
+#onboard{background:#0a1226 url(img/bg.jpg) center center/cover no-repeat;text-align:center;width:100vw;height:100vh;height:100dvh}
 h1{position:absolute;left:0;right:0;top:calc(var(--hs)*.348);font-weight:800;font-size:30px;line-height:36px}
 .ob-desc{position:absolute;left:0;right:0;top:calc(var(--hs)*.348 + 58px);font-size:12px;line-height:30px;color:#e4e4e4}
 #startBtn{bottom:min(82px,calc(var(--hs)*.097))}
@@ -53,7 +53,7 @@ h1{position:absolute;left:0;right:0;top:calc(var(--hs)*.348);font-weight:800;fon
 .con-id{font-size:12px;font-weight:500;color:#e0e0e0;margin-left:9px}
 .con-desc{font-size:12px;font-weight:500;line-height:25px;color:#eaeaea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stamp-btn{position:absolute;left:17px;bottom:13px;width:80px;height:106px;background:url(img/stampbtn.png) center/100% 100% no-repeat;color:#959595;font-size:12px;font-weight:500;line-height:20px;padding-top:2px}
-.post-card{position:absolute;left:108px;width:261px;bottom:17px;height:97px;background:#f3f3f3;border-radius:10px;text-align:left;overflow:hidden}
+.post-card{position:absolute;left:108px;width:261px;bottom:17px;height:97px;background:rgba(243,243,243,.82);border-radius:10px;text-align:left;overflow:hidden}
 .pc-label{position:absolute;left:12px;top:5px;font-size:12px;font-weight:600;color:#505050;line-height:25px}
 .seal-mini{position:absolute;left:9px;top:24px;width:58px;height:57px;transform:rotate(7.89deg)}
 #miniStamps img{position:absolute;width:40.3px;height:58.6px}
