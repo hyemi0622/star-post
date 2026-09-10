@@ -11,7 +11,7 @@ document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false})
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 let lastT=0;document.addEventListener('touchend',e=>{const t=Date.now();if(t-lastT<300&&!e.target.closest('input'))e.preventDefault();lastT=t},{passive:false});
 if(/KAKAOTALK/i.test(navigator.userAgent)){const a=$('#kakaoOut');a.hidden=false;a.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href)}
-function setScale(){document.getElementById('app').style.setProperty('--s',Math.min(1,innerWidth/390).toFixed(4))}setScale();addEventListener('resize',setScale);
+function setScale(){const cs=getComputedStyle(document.documentElement),sat=parseFloat(cs.getPropertyValue('--sat'))||0,sab=parseFloat(cs.getPropertyValue('--sab'))||0,h=innerHeight-sat-sab,s=Math.min(innerWidth/390,h/844),app=document.getElementById('app');app.style.setProperty('--s',s.toFixed(4));app.style.setProperty('--sy',(sat+Math.max(0,(h-844*s)/2)).toFixed(1)+'px')}setScale();addEventListener('resize',setScale);
 /* 기계 창(구멍) 위치: 296x396 기준 */
 const HOLE={x:95.5,y:117.75,w:110.5,h:162.75};
 function holeRect(){const b=$('#machine img').getBoundingClientRect(),s=b.width/296;return{left:b.left+HOLE.x*s,top:b.top+HOLE.y*s,width:HOLE.w*s,height:HOLE.h*s}}
