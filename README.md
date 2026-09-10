@@ -8,7 +8,11 @@
 - `img/` — 시안 이미지(배경, 스탬프 기계, 우표, 도장, 엽서, 우표 생성 버튼). 원본 PNG는 폴더 최상위에 그대로 있음
 - `data/sky.js` — 별 3,232개(5.6등급까지) + 별자리 89개 선 데이터 (d3-celestial 데이터 가공)
 
-## GitHub Pages 배포
+## 배포 주소
+- https://hyemi0622.github.io/star-post/ (저장소: https://github.com/hyemi0622/star-post)
+- 수정 후 `git add -A && git commit -m "..." && git push` 하면 1~2분 뒤 반영됩니다. 폰에서 옛 화면이 보이면 주소 뒤에 `?v=숫자`를 붙여 새로고침하세요.
+
+## GitHub Pages 배포(처음 설정용, 이미 완료)
 1. GitHub에서 새 저장소 생성 (예: `starpost`)
 2. 이 폴더에서
    ```bash
