@@ -169,7 +169,7 @@ $('#postBtn').onclick=openPost;$('#pcBack').onclick=()=>{$('#postcard').classLis
   else{const c=s.sc||1,nx=clamp(x+drag.dx,30*c,300-30*c),ny=clamp(y+drag.dy,20*c,449-20*c);if(Math.hypot(nx-s.x,ny-s.y)>1)moved=true;s.x=nx;s.y=ny}renderCard()});
  const up=()=>{if(drag&&moved)save();drag=null};pcc.addEventListener('pointerup',up);pcc.addEventListener('pointercancel',up);pcc.addEventListener('contextmenu',e=>e.preventDefault());
  const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
- pcc.addEventListener('touchstart',e=>{if(e.touches.length===2&&selIdx>=0){pinch={d:dist(e.touches),s0:S.stamps[selIdx].sc||1};drag=null}},{passive:true});
+ pcc.addEventListener('touchstart',e=>{if(e.touches.length===2){if(selIdx<0){const b=vrect(pcc),mx=(e.touches[0].clientX+e.touches[1].clientX)/2,my=(e.touches[0].clientY+e.touches[1].clientY)/2;selIdx=hit((mx-b.left)/b.width*300,(my-b.top)/b.height*449)}if(selIdx>=0){pinch={d:dist(e.touches),s0:S.stamps[selIdx].sc||1};drag=null;renderCard()}}},{passive:true});
  pcc.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2&&selIdx>=0){e.preventDefault();setSc(S.stamps[selIdx],pinch.s0*dist(e.touches)/pinch.d);renderCard()}},{passive:false});
  pcc.addEventListener('touchend',e=>{if(pinch&&e.touches.length<2){pinch=null;save()}});
  $('#sheetDone').onclick=()=>{$('#sheet').hidden=true}})();
