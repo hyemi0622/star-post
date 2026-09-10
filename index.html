@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#05070f">
+<meta name="format-detection" content="telephone=no">
+<title>별엽서</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+<!-- 온보딩 -->
+<section id="onboard" class="screen show">
+  <div class="ob-sky"><canvas id="obStars"></canvas></div>
+  <div class="ob-body">
+    <p class="ob-eyebrow">STAR POST</p>
+    <h1>별엽서</h1>
+    <p class="ob-desc">도시의 밤에도 하늘엔 별이 있어요.<br>핸드폰을 하늘로 들어 올리면<br>지금 그 자리에 숨어 있는 별들이 보여요.</p>
+    <p class="ob-label">오늘 함께 별을 보는 사람은?</p>
+    <div class="count-row" id="countRow"></div>
+    <div class="char-preview" id="charPreview"></div>
+    <button id="startBtn" class="btn-primary">하늘 보러 가기</button>
+    <p class="ob-hint">위치·방향 센서 권한을 허용해 주세요. 카메라는 선택이에요.</p>
+  </div>
+</section>
+
+<!-- 하늘 -->
+<section id="sky" class="screen">
+  <video id="cam" autoplay muted playsinline></video>
+  <div id="skyBg"></div>
+  <div id="tint"></div>
+  <canvas id="stars"></canvas>
+  <div class="hud">
+    <div class="pill" id="hudPlace">위치 찾는 중…</div>
+    <div class="pill small" id="hudDir">--</div>
+  </div>
+  <button class="icon-btn" id="camToggle" title="카메라">◐</button>
+  <div id="hint" class="hint">핸드폰을 하늘로 들어 올려 보세요</div>
+  <div id="conInfo" class="con-info">
+    <div class="con-name"></div>
+    <div class="con-desc"></div>
+  </div>
+  <button id="stampBtn" class="stamp-btn">스탬프</button>
+  <button id="postBtn" class="post-btn">엽서<span id="postCount">0</span></button>
+  <div id="people" class="people"></div>
+</section>
+
+<!-- 스탬프 기계 -->
+<div id="machine" class="overlay">
+  <div class="machine">
+    <div class="m-brand">STAR POST</div>
+    <div class="m-window" id="mWindow"><canvas id="mCanvas" width="240" height="300"></canvas><div class="m-flash"></div><div class="m-guide">별자리를 창 안에 맞춰 주세요</div></div>
+    <button id="pressBtn" class="m-press"></button>
+  </div>
+  <button class="close-btn" id="mClose">×</button>
+</div>
+
+<!-- 우표 이름 짓기 -->
+<div id="naming" class="overlay">
+  <button class="close-btn" id="nClose">×</button>
+  <div class="naming">
+    <img id="nImg" class="stamp-img" alt="">
+    <input id="nName" type="text" placeholder="이름 입력" maxlength="20" autocomplete="off">
+    <div class="pill dark" id="nDate"></div>
+  </div>
+  <button id="nSave" class="check-btn">✓</button>
+</div>
+
+<!-- 엽서 -->
+<section id="postcard" class="screen">
+  <div class="pc-top">
+    <button class="text-btn" id="pcBack">← 하늘</button>
+    <button class="text-btn" id="pcSave">이미지로 저장</button>
+  </div>
+  <div class="pc-scroll">
+    <div class="card" id="card">
+      <div class="card-head"><span class="card-title">POST CARD</span><span class="card-sub">STAR POST · 별엽서</span></div>
+      <div class="card-body">
+        <div class="card-left">
+          <div class="card-msg" id="pcMsg" contenteditable="true" data-ph="여기에 그날의 하늘을 적어 보세요."></div>
+        </div>
+        <div class="card-right">
+          <div class="stamps" id="pcStamps"></div>
+          <div class="field"><label>with</label><input id="pcWith" type="text" placeholder="누구와 봤나요"></div>
+          <div class="field"><label>at</label><input id="pcWhere" type="text" placeholder="어디서 봤나요"></div>
+          <div class="field"><label>on</label><span id="pcDate" class="field-val"></span></div>
+        </div>
+      </div>
+    </div>
+    <p class="pc-hint">우표를 길게 누르면 뗄 수 있어요</p>
+  </div>
+</section>
+
+<!-- 저장 미리보기 -->
+<div id="preview" class="overlay">
+  <button class="close-btn" id="pvClose">×</button>
+  <div class="pv-body"><img id="pvImg" alt="엽서"><p>이미지를 길게 눌러 저장하세요</p></div>
+</div>
+
+</div>
+<script src="data/sky.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
