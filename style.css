@@ -5,8 +5,9 @@ button,input{font:inherit;color:inherit;border:0;background:none;outline:0;-webk
 input{font-size:16px;-webkit-user-select:text;user-select:text}
 [hidden]{display:none!important}
 :root{--sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom)}
-#app{position:fixed;inset:0;overflow:hidden;--s:1;--sy:0px}
-.stage{position:absolute;left:50%;top:var(--sy);width:390px;height:844px;margin-left:-195px;transform:scale(var(--s));transform-origin:top center;pointer-events:none}
+#app{position:fixed;inset:0;overflow:hidden;--s:1;--hs:844px}
+.stage{position:absolute;left:50%;top:0;width:390px;height:var(--hs);margin-left:-195px;transform:scale(var(--s));transform-origin:top center;pointer-events:none}
+.spacer{flex:1}
 .stage>*{pointer-events:auto}
 .stage .hint,.stage .con-info{pointer-events:none}
 .screen{position:absolute;inset:0;display:none}
@@ -23,11 +24,11 @@ input{font-size:16px;-webkit-user-select:text;user-select:text}
 
 /* 온보딩 */
 #onboard{background:#0a1226 url(img/bg.jpg) center/cover;text-align:center}
-h1{position:absolute;left:0;right:0;top:294px;font-weight:800;font-size:30px;line-height:36px}
-.ob-desc{position:absolute;left:0;right:0;top:352px;font-size:12px;line-height:30px;color:#e4e4e4}
-#startBtn{top:714px}
-.ob-hint{position:absolute;left:0;right:0;top:775px;font-size:12px;line-height:20px}
-.kakao-out{position:absolute;left:0;right:0;top:680px;font-size:12px;color:#ffd75e;text-decoration:underline}
+h1{position:absolute;left:0;right:0;top:calc(var(--hs)*.348);font-weight:800;font-size:30px;line-height:36px}
+.ob-desc{position:absolute;left:0;right:0;top:calc(var(--hs)*.348 + 58px);font-size:12px;line-height:30px;color:#e4e4e4}
+#startBtn{bottom:82px}
+.ob-hint{position:absolute;left:0;right:0;bottom:42px;font-size:12px;line-height:20px}
+.kakao-out{position:absolute;left:0;right:0;bottom:150px;font-size:12px;color:#ffd75e;text-decoration:underline}
 
 /* 하늘 */
 #sky{background:#05070f}
@@ -37,26 +38,31 @@ h1{position:absolute;left:0;right:0;top:294px;font-weight:800;font-size:30px;lin
 #skyBg.day{background:linear-gradient(#5f8fd6 0%,#8fb5e6 60%,#cfdff2 100%)}
 #tint{position:absolute;inset:0;background:rgba(3,6,20,.3);pointer-events:none}
 #tint.day{background:rgba(4,9,36,.6)}
+#tint.cam{background:transparent}
 #stars{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 #hudPlace{top:18px}
 #hudDir{top:52px}
 #sensorBtn{top:86px}
 .hint{position:absolute;top:30%;left:0;right:0;text-align:center;font-size:14px;opacity:.85;pointer-events:none;transition:opacity .6s;text-shadow:0 1px 6px #000}
 .hint.off{opacity:0}
-.con-info{position:absolute;left:21px;width:348px;top:647px;height:67px;background:rgba(0,0,0,.3);border-radius:10px;padding:10px 13px 0;opacity:0;transition:.3s}
+.con-info{position:absolute;left:21px;width:348px;bottom:130px;height:67px;background:rgba(0,0,0,.3);border-radius:10px;padding:10px 13px 0;opacity:0;transition:.3s}
 .con-info.show{opacity:1}
 .con-name{font-weight:600;font-size:16px;line-height:25px;color:#fff}
 .con-id{font-size:12px;font-weight:500;color:#e0e0e0;margin-left:9px}
 .con-desc{font-size:12px;font-weight:500;line-height:25px;color:#eaeaea;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stamp-btn{position:absolute;left:17px;top:725px;width:80px;height:106px;background:url(img/stampbtn.png) center/100% 100% no-repeat;color:#959595;font-size:12px;font-weight:500;line-height:20px;padding-top:2px}
-.post-card{position:absolute;left:108px;width:261px;top:730px;height:97px;background:#f3f3f3;border-radius:10px;text-align:left;overflow:hidden}
+.stamp-btn{position:absolute;left:17px;bottom:13px;width:80px;height:106px;background:url(img/stampbtn.png) center/100% 100% no-repeat;color:#959595;font-size:12px;font-weight:500;line-height:20px;padding-top:2px}
+.post-card{position:absolute;left:108px;width:261px;bottom:17px;height:97px;background:#f3f3f3;border-radius:10px;text-align:left;overflow:hidden}
 .pc-label{position:absolute;left:12px;top:5px;font-size:12px;font-weight:600;color:#505050;line-height:25px}
 .seal-mini{position:absolute;left:9px;top:24px;width:58px;height:57px;transform:rotate(7.89deg)}
 #miniStamps img{position:absolute;width:40.3px;height:58.6px}
 .chev{position:absolute;right:12px;top:43px;width:9px;height:9px;border-right:1.5px solid #8d8d8d;border-top:1.5px solid #8d8d8d;transform:rotate(45deg)}
 
 /* 스탬프 기계 */
-#machine{position:absolute;left:47px;top:166px;width:296px;height:396px;z-index:10}
+#machine{position:absolute;left:47px;top:166px;width:296px;height:396px;z-index:10;transform-origin:top center}
+#sky.mshort.mopen .stamp-btn,#sky.mshort.mopen .post-card{display:none}
+#sky.mshort.mopen .con-info{bottom:13px}
+.zbtn{position:absolute;top:178px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);color:#272727;font-size:24px;line-height:40px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#zOut{left:-46px}#zIn{right:-46px}
 #machine img{width:296px;height:396px;display:block;pointer-events:none;transition:transform .12s}
 #machine.press img{transform:scale(.97) translateY(4px)}
 #machine.flash::after{content:"";position:absolute;left:95.5px;top:117.75px;border-radius:6px;width:110.5px;height:162.75px;background:#fff;animation:fl .45s ease-out forwards;pointer-events:none}
@@ -66,22 +72,23 @@ h1{position:absolute;left:0;right:0;top:294px;font-weight:800;font-size:30px;lin
 #mClose{position:absolute;right:0;top:-38px;font-size:12px;padding:5px 10px;border:1px solid rgba(255,255,255,.6);border-radius:999px;text-shadow:0 1px 4px #000}
 
 /* 이름 짓기 */
-#naming{text-align:center}
-#nImg{position:absolute;left:50%;margin-left:-112px;top:179px;width:225px;height:327px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.15))}
-#nSeal{position:absolute;left:50%;margin-left:33px;top:135px;width:108px;height:106px;transform:rotate(7.89deg)}
-#nName{position:absolute;left:50%;margin-left:-93px;top:530px;width:186px;text-align:center;font-size:16px;font-weight:500;line-height:25px;color:#272727}
+#naming .stage{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:calc(var(--hs)*.212 - 20px);padding-bottom:52px}
+.n-stamp{position:relative;flex:none;margin-top:20px}
+#nImg{display:block;height:min(327px,calc(var(--hs)*.39));width:auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.15))}
+#nSeal{position:absolute;right:-30px;top:-44px;width:33%;height:auto;transform:rotate(7.89deg)}
+#nName{flex:none;width:186px;margin-top:24px;text-align:center;font-size:16px;font-weight:500;line-height:25px;color:#272727;border-bottom:1.5px solid #c5c5c5;padding-bottom:4px}
 #nName::placeholder{color:#b7b7b7}
-.n-line{position:absolute;left:50%;margin-left:-93px;top:559px;width:186px;border-top:1.5px solid #c5c5c5}
-.n-date{position:absolute;left:50%;margin-left:-93px;top:580px;width:187px;height:34px;line-height:34px;border-radius:999px;background:#f3f3f3;font-size:14px;font-weight:500;color:#676767}
-.n-hint{position:absolute;left:0;right:0;top:716px;font-size:12px;line-height:20px;color:#8a8a8a}
-#nSave{top:744px}
+.n-date{flex:none;margin-top:21px;width:187px;height:34px;line-height:34px;border-radius:999px;background:#f3f3f3;font-size:14px;font-weight:500;color:#676767}
+.n-hint{flex:none;font-size:12px;line-height:20px;color:#8a8a8a;margin-bottom:8px}
+#nSave{position:static;flex:none;width:348px}
 
 /* 엽서 */
 #postcard{background:#fff;color:#272727;text-align:center}
-#pcCanvas{position:absolute;left:50%;margin-left:-150px;top:128px;width:300px;height:449px;touch-action:none}
+#postcard .stage{display:flex;flex-direction:column;align-items:center;padding-top:min(128px,calc(var(--hs)*.15));padding-bottom:52px}
+#pcCanvas{flex:none;height:min(449px,calc(var(--hs)*.6));width:auto;touch-action:none}
 .pc-hint{display:none;font-size:12px;font-weight:500;line-height:25px;color:#6d6d6d}
-.pc-hint2{position:absolute;left:0;right:0;top:712px;font-size:12px;font-weight:500;line-height:25px;letter-spacing:-.4px;color:#6d6d6d}
-#pcSave{top:744px}
+.pc-hint2{flex:none;margin-bottom:7px;font-size:12px;font-weight:500;line-height:25px;letter-spacing:-.4px;color:#6d6d6d}
+#pcSave{position:static;flex:none;width:348px}
 #sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -6px 30px rgba(0,0,0,.18);padding:18px 21px 20px;text-align:left;z-index:12}
 #sheet label{display:flex;align-items:center;gap:10px;border-bottom:1px solid #e3e3e3;padding:9px 2px}
 #sheet span{width:52px;flex:none;font-size:12px;font-weight:600;color:#8a8a8a}

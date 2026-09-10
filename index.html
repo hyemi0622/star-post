@@ -10,7 +10,7 @@
 <title>STAR POST</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <div id="app">
@@ -24,8 +24,9 @@
 </div></section>
 
 <section id="sky" class="screen">
+  <div id="skyBg"></div>
   <video id="cam" autoplay muted playsinline></video>
-  <div id="skyBg"></div><div id="tint"></div>
+  <div id="tint"></div>
   <canvas id="stars"></canvas>
   <div class="stage">
   <div class="pill" id="hudPlace">위치 찾는 중…</div>
@@ -36,6 +37,7 @@
     <img src="img/machine.png" alt="">
     <button id="pressBtn" aria-label="찍기"></button>
     <button id="mClose">닫기</button>
+    <button id="zOut" class="zbtn">−</button><button id="zIn" class="zbtn">+</button>
   </div>
   <div id="conInfo" class="con-info"><span class="con-name"></span><span class="con-id"></span><div class="con-desc"></div></div>
   <button id="stampBtn" class="stamp-btn">별자리<br>우표 생성</button>
@@ -50,11 +52,10 @@
 
 <div id="naming" class="overlay"><div class="stage">
   <button class="back" id="nClose">←</button>
-  <img id="nImg" alt="우표">
-  <img id="nSeal" src="img/seal.png" alt="">
+  <div class="n-stamp"><img id="nImg" alt="우표"><img id="nSeal" src="img/seal.png" alt=""></div>
   <input id="nName" type="text" placeholder="이름을 입력해 주세요." maxlength="20" autocomplete="off">
-  <div class="n-line"></div>
   <div class="n-date" id="nDate"></div>
+  <div class="spacer"></div>
   <p class="n-hint">소중한 사람이나 자신의 별자리에 이름을 적어보세요.</p>
   <button id="nSave" class="btn dark">확인</button>
 </div></div>
@@ -62,6 +63,7 @@
 <section id="postcard" class="screen"><div class="stage">
   <button class="back" id="pcBack">←</button>
   <canvas id="pcCanvas"></canvas>
+  <div class="spacer"></div>
   <p class="pc-hint2">엽서를 누르면 글을 쓰고, 우표를 누르면 옮기거나 지울 수 있어요</p>
   <button id="pcSave" class="btn dark">이미지 저장하기</button>
   <div id="sheet" hidden>
@@ -80,6 +82,6 @@
 
 </div>
 <script src="data/sky.js?v=2"></script>
-<script src="app.js?v=8"></script>
+<script src="app.js?v=11"></script>
 </body>
 </html>

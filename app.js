@@ -11,7 +11,9 @@ document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false})
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 let lastT=0;document.addEventListener('touchend',e=>{const t=Date.now();if(t-lastT<300&&!e.target.closest('input'))e.preventDefault();lastT=t},{passive:false});
 if(/KAKAOTALK/i.test(navigator.userAgent)){const a=$('#kakaoOut');a.hidden=false;a.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href)}
-function setScale(){const cs=getComputedStyle(document.documentElement),sat=parseFloat(cs.getPropertyValue('--sat'))||0,sab=parseFloat(cs.getPropertyValue('--sab'))||0,h=innerHeight-sat-sab,s=Math.min(innerWidth/390,h/844),app=document.getElementById('app');app.style.setProperty('--s',s.toFixed(4));app.style.setProperty('--sy',(sat+Math.max(0,(h-844*s)/2)).toFixed(1)+'px')}setScale();addEventListener('resize',setScale);
+let HS=844;function setScale(){const w=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth),s=Math.min(1,w/390);HS=innerHeight/s;const app=document.getElementById('app');app.style.setProperty('--s',s.toFixed(4));app.style.setProperty('--hs',HS.toFixed(1)+'px');layoutMachine()}
+function layoutMachine(){const m=document.getElementById('machine'),sky=document.getElementById('sky');if(!m)return;let top=166,sc=1,short=false;const cardTop=HS-197;if(top+404>cardTop){top=Math.max(96,cardTop-404);if(top+404>cardTop){short=true;top=96;sc=Math.min(1,(HS-80-8-top)/404)}}m.style.top=top+'px';m.style.transform=`scale(${sc.toFixed(3)})`;sky.classList.toggle('mshort',short)}
+setScale();addEventListener('resize',setScale);addEventListener('orientationchange',()=>setTimeout(setScale,300));[300,1000,2500].forEach(t=>setTimeout(setScale,t));
 /* 기계 창(구멍) 위치: 296x396 기준 */
 const HOLE={x:95.5,y:117.75,w:110.5,h:162.75};
 function holeRect(){const b=$('#machine img').getBoundingClientRect(),s=b.width/296;return{left:b.left+HOLE.x*s,top:b.top+HOLE.y*s,width:HOLE.w*s,height:HOLE.h*s}}
@@ -38,14 +40,17 @@ function updAstro(){const d=Date.now();if(d-lastAstro<1000)return;lastAstro=d;co
 /* ---- 방향 ---- */
 function rotM(a,b,g){a*=R;b*=R;g*=R;const cA=Math.cos(a),sA=Math.sin(a),cB=Math.cos(b),sB=Math.sin(b),cG=Math.cos(g),sG=Math.sin(g);return[cA*cG-sA*sB*sG,-sA*cB,cA*sG+sA*sB*cG,sA*cG+cA*sB*sG,cA*cB,sA*sG-cA*sB*cG,-cB*sG,sB,cB*cG]}
 let Rt=rotM(0,90,0),Rs=Rt.slice();
-function onOri(e){if(e.alpha==null)return;let a=e.alpha;if(e.webkitCompassHeading!=null)a=360-e.webkitCompassHeading;Rt=rotM(a+S.off,e.beta,e.gamma);if(S.mode!=='sensor'){S.mode='sensor';$('#sensorBtn').hidden=true;$('#hint').classList.add('off')}}
+let aOff=null;const wrap180=d=>((d+540)%360)-180;
+function onOri(e){if(e.alpha==null)return;let a=e.alpha;
+ if(e.webkitCompassHeading!=null&&e.webkitCompassHeading>=0){const tgt=wrap180(360-e.webkitCompassHeading-e.alpha);if(aOff==null)aOff=tgt;else if(Math.abs(e.beta)<55&&Math.abs(e.gamma)<45)aOff+=wrap180(tgt-aOff)*.04;a=e.alpha+aOff}
+ Rt=rotM(a+S.off,e.beta,e.gamma);if(S.mode!=='sensor'){S.mode='sensor';$('#sensorBtn').hidden=true;$('#hint').classList.add('off')}}
 function setManual(){if(S.mode==='sensor')return;S.mode='manual';Rt=rotM(-S.az,90+S.alt,0);$('#hint').textContent='화면을 드래그해서 하늘을 둘러보세요';$('#hint').classList.remove('off');if(window.DeviceOrientationEvent?.requestPermission)$('#sensorBtn').hidden=false}
 let sensorsInit=false;
 function initSensors(){if(sensorsInit)return;sensorsInit=true;let abs=false;if('ondeviceorientationabsolute' in window)addEventListener('deviceorientationabsolute',e=>{if(e.alpha!=null){abs=true;onOri(e)}});
  addEventListener('deviceorientation',e=>{if(!abs)onOri(e)});setTimeout(()=>{if(S.mode==='wait')setManual()},2500);setTimeout(()=>$('#hint').classList.add('off'),8000)}
 async function askSensor(){try{if(window.DeviceOrientationEvent?.requestPermission){const r=await DeviceOrientationEvent.requestPermission();if(r!=='granted')setManual()}}catch(e){setManual()}initSensors()}
 $('#sensorBtn').onclick=askSensor;
-function smoothR(){for(let i=0;i<9;i++)Rs[i]+=(Rt[i]-Rs[i])*.18;const c=[[Rs[0],Rs[3],Rs[6]],[Rs[1],Rs[4],Rs[7]]];const n=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l)};let x=n(c[0]),y=c[1],d=x[0]*y[0]+x[1]*y[1]+x[2]*y[2];y=n([y[0]-d*x[0],y[1]-d*x[1],y[2]-d*x[2]]);const z=[x[1]*y[2]-x[2]*y[1],x[2]*y[0]-x[0]*y[2],x[0]*y[1]-x[1]*y[0]];Rs=[x[0],y[0],z[0],x[1],y[1],z[1],x[2],y[2],z[2]]}
+function smoothR(){for(let i=0;i<9;i++)Rs[i]+=(Rt[i]-Rs[i])*.1;const c=[[Rs[0],Rs[3],Rs[6]],[Rs[1],Rs[4],Rs[7]]];const n=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l)};let x=n(c[0]),y=c[1],d=x[0]*y[0]+x[1]*y[1]+x[2]*y[2];y=n([y[0]-d*x[0],y[1]-d*x[1],y[2]-d*x[2]]);const z=[x[1]*y[2]-x[2]*y[1],x[2]*y[0]-x[0]*y[2],x[0]*y[1]-x[1]*y[0]];Rs=[x[0],y[0],z[0],x[1],y[1],z[1],x[2],y[2],z[2]]}
 /* 드래그(둘러보기/방위 보정) + 핀치 줌 */
 (function(){const cv=$('#stars');let px,py,on=false,pinch=null;const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
  cv.addEventListener('pointerdown',e=>{on=true;px=e.clientX;py=e.clientY});cv.addEventListener('pointermove',e=>{if(!on||pinch)return;const dx=e.clientX-px,dy=e.clientY-py;px=e.clientX;py=e.clientY;if(S.mode==='manual'){S.az=(S.az-dx*.25*S.fov/64+360)%360;S.alt=clamp(S.alt+dy*.25*S.fov/64,-10,90);Rt=rotM(-S.az,90+S.alt,0)}else S.off-=dx*.15});addEventListener('pointerup',()=>on=false);
@@ -53,7 +58,8 @@ function smoothR(){for(let i=0;i<9;i++)Rs[i]+=(Rt[i]-Rs[i])*.18;const c=[[Rs[0],
  sky.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){e.preventDefault();setFov(pinch.f*pinch.d/dist(e.touches))}},{passive:false});
  sky.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null});
  sky.addEventListener('wheel',e=>{e.preventDefault();setFov(S.fov*(1+e.deltaY*.002))},{passive:false})})();
-function setFov(f){S.fov=clamp(f,18,115);F=(H/2)/Math.tan(S.fov/2*R);$('#cam').style.transform=`scale(${(Math.tan(32*R)/Math.tan(S.fov/2*R)).toFixed(3)})`}
+function setFov(f){S.fov=clamp(f,18,120);F=(H/2)/Math.tan(S.fov/2*R);const z=Math.tan(32*R)/Math.tan(S.fov/2*R);$('#cam').style.transform=`scale(${z.toFixed(3)})`;}
+$('#zOut').onclick=()=>setFov(S.fov*1.18);$('#zIn').onclick=()=>setFov(S.fov/1.18);
 
 /* ---- 렌더 ---- */
 const cv=$('#stars'),g=cv.getContext('2d');let W,H,dpr=1,F,fc=0;
@@ -78,19 +84,19 @@ function season(ra){const m=(Math.round(9+ra/30)%12)+1;return m>=3&&m<=5?'봄':m
 function showCon(c){const el=$('#conInfo');if(!c){el.classList.remove('show');return}el.querySelector('.con-name').textContent=c.ko;el.querySelector('.con-id').textContent=c.id;el.querySelector('.con-desc').textContent=DESC[c.id]||`${c.ko}. ${season(c.ra)} 밤하늘에서 가장 잘 보이는 별자리예요.`;el.classList.add('show')}
 
 /* ---- 권한 & 시작 ---- */
-async function startCam(){try{const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280}},audio:false});const v=$('#cam');v.srcObject=st;v.classList.add('on');S.camOn=true;await v.play().catch(()=>{})}catch(e){S.camOn=false}}
+async function startCam(){try{const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280}},audio:false});const v=$('#cam');v.srcObject=st;v.classList.add('on');S.camOn=true;$('#tint').classList.add('cam');await v.play().catch(()=>{})}catch(e){S.camOn=false}}
 async function geocode(){const q=l=>fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${S.lat}&lon=${S.lon}&zoom=10&accept-language=${l}`).then(r=>r.json()).then(j=>{const a=j.address||{};return a.city||a.town||a.county||a.province||a.state||j.display_name.split(',')[0]});
  try{S.place=await q('ko');S.placeEn=await q('en').catch(()=>S.place)}catch(e){S.place=S.placeEn=`${S.lat.toFixed(2)}, ${S.lon.toFixed(2)}`}$('#hudPlace').textContent=S.place;if(!$('#pcWhere').value)$('#pcWhere').value=S.place}
 $('#startBtn').onclick=async()=>{await askSensor();startCam();$('#onboard').classList.remove('show');$('#sky').classList.add('show');renderMini();
  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{S.lat=p.coords.latitude;S.lon=p.coords.longitude;lastAstro=0;geocode()},()=>{S.place='서울';S.placeEn='Seoul';$('#hudPlace').textContent='위치 없음 · 서울 기준'},{timeout:8000,maximumAge:6e5});else geocode()};
 
 /* ---- 스탬프 기계 & 우표 생성 ---- */
-$('#stampBtn').onclick=()=>{if(S.stamps.length>=6)return alert('엽서에는 우표를 6장까지 붙일 수 있어요. 엽서에서 우표를 떼어 주세요.');$('#machine').hidden=false;$('#hint').classList.add('off')};
-$('#mClose').onclick=()=>{$('#machine').hidden=true};
+$('#stampBtn').onclick=()=>{if(S.stamps.length>=6)return alert('엽서에는 우표를 6장까지 붙일 수 있어요. 엽서에서 우표를 떼어 주세요.');$('#machine').hidden=false;$('#sky').classList.add('mopen');layoutMachine();$('#hint').classList.add('off')};
+$('#mClose').onclick=()=>{$('#machine').hidden=true;$('#sky').classList.remove('mopen')};
 let pending=null;
 const enDate=d=>new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 $('#pressBtn').onclick=()=>{const m=$('#machine');m.classList.add('press');m.classList.remove('flash');void m.offsetWidth;m.classList.add('flash');
- setTimeout(()=>{m.classList.remove('press');const img=makeStamp();pending={img,con:S.cur?S.cur.id:'',ko:S.cur?S.cur.ko:'하늘',date:Date.now(),place:S.place};$('#nImg').src=img;$('#nName').value='';$('#nDate').textContent=`${enDate(pending.date)} - ${S.placeEn||S.place||'Seoul'}`;m.hidden=true;$('#naming').classList.add('show')},380)};
+ setTimeout(()=>{m.classList.remove('press');const img=makeStamp();pending={img,con:S.cur?S.cur.id:'',ko:S.cur?S.cur.ko:'하늘',date:Date.now(),place:S.place};$('#nImg').src=img;$('#nName').value='';$('#nDate').textContent=`${enDate(pending.date)} - ${S.placeEn||S.place||'Seoul'}`;m.hidden=true;$('#sky').classList.remove('mopen');$('#naming').classList.add('show')},380)};
 /* 창 안의 화면(카메라+별)을 우표(img/stamp.png) 모양 그대로 잘라냄 */
 function makeStamp(){const r=holeRect(),k=2,Wi=225*k,Hi=327*k,out=document.createElement('canvas');out.width=Wi;out.height=Hi;const o=out.getContext('2d');
  const gr=o.createLinearGradient(0,0,0,Hi);gr.addColorStop(0,'#070b1e');gr.addColorStop(1,'#182450');o.fillStyle=gr;o.fillRect(0,0,Wi,Hi);
@@ -100,7 +106,12 @@ function makeStamp(){const r=holeRect(),k=2,Wi=225*k,Hi=327*k,out=document.creat
  o.globalCompositeOperation='destination-in';o.drawImage(IMG.stamp,0,0,Wi,Hi);o.globalCompositeOperation='multiply';o.globalAlpha=.35;o.drawImage(IMG.stamp,0,0,Wi,Hi);o.globalCompositeOperation='source-over';o.globalAlpha=1;
  return out.toDataURL('image/png')}
 $('#nClose').onclick=()=>$('#naming').classList.remove('show');
-$('#nSave').onclick=()=>{if(!pending)return;pending.name=$('#nName').value.trim()||pending.ko;const sl=SLOTS[S.stamps.length]||SLOTS[5];pending.x=sl[0];pending.y=sl[1];pending.rot=sl[2];S.stamps.push(pending);if(!store.set('sp_stamps2',S.stamps))alert('저장 공간이 가득 찼어요. 엽서를 이미지로 저장한 뒤 우표를 몇 개 떼어 주세요.');pending=null;$('#naming').classList.remove('show');renderMini();openPost()};
+function stampWithText(src,con,name,cb){const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const o=c.getContext('2d'),k=im.width/225;o.drawImage(im,0,0);
+ o.save();o.globalCompositeOperation='source-atop';o.textAlign='center';o.shadowColor='rgba(0,0,0,.7)';o.shadowBlur=4*k;o.fillStyle='#fff';
+ o.font=`600 ${13*k}px "Apple SD Gothic Neo","Noto Sans KR",Inter,sans-serif`;o.fillText(name,c.width/2,c.height-30*k,190*k);
+ o.font=`500 ${10*k}px "Apple SD Gothic Neo","Noto Sans KR",Inter,sans-serif`;o.globalAlpha=.9;o.fillText(con,c.width/2,c.height-16*k,190*k);o.restore();cb(c.toDataURL('image/png'))};im.src=src}
+$('#nSave').onclick=()=>{if(!pending)return;const nm=$('#nName').value.trim();stampWithText(pending.img,pending.ko,nm||pending.ko,img=>{pending.img=img;saveStamp(nm)})};
+function saveStamp(nm){pending.name=nm||pending.ko;const sl=SLOTS[S.stamps.length]||SLOTS[5];pending.x=sl[0];pending.y=sl[1];pending.rot=sl[2];S.stamps.push(pending);if(!store.set('sp_stamps2',S.stamps))alert('저장 공간이 가득 찼어요. 엽서를 이미지로 저장한 뒤 우표를 몇 개 떼어 주세요.');pending=null;$('#naming').classList.remove('show');renderMini();openPost()};
 
 /* 엽서 만들기 카드의 미니 우표 (시안 좌표: 카드 기준 108,730) */
 const MINI=[[186,748.42,9.61],[205,743.62,9.61],[229,756.1,-1.39],[256.57,743,1.71],[271.24,758.01,-1.85],[287.59,745.79,16.49]];
@@ -114,7 +125,7 @@ function dateText(){const ds=S.stamps.map(s=>s.date);if(!ds.length)return fmt(Da
 const imgCache={};function getImg(src){if(!imgCache[src]){const i=new Image();i.src=src;i.onload=renderCard;imgCache[src]=i}return imgCache[src]}
 const pcc=$('#pcCanvas'),pg=pcc.getContext('2d');
 /* 우표 슬롯: 시안의 6개 우표 위치(화면 좌표)를 엽서(45,128) 기준으로 변환한 중심점 */
-const SLOTS=[[81,131,90],[179,131,97.14],[81,202,90],[179,202,90],[81,274,90],[179,274,83.23]];
+const SLOTS=[[82,44,90],[210,44,97.14],[82,112,90],[210,112,90],[82,180,90],[210,180,83.23]];
 function vtext(o,txt,x,y,font,color,maxW){o.save();o.translate(x,y);o.rotate(Math.PI/2);o.font=font;o.fillStyle=color;o.textBaseline='alphabetic';if(maxW)o.fillText(txt,0,0,maxW);else o.fillText(txt,0,0);o.restore()}
 function wrap(o,txt,font,maxW,maxLines){o.font=font;const lines=[];let cur='';for(const ch of txt){const t=cur+ch;if(o.measureText(t).width>maxW&&cur){lines.push(cur);cur=ch}else cur=t}if(cur)lines.push(cur);return lines.slice(0,maxLines)}
 let selIdx=-1;
