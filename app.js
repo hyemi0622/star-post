@@ -1,5 +1,5 @@
 /* 자동 업데이트: 배포된 버전이 다르면 캐시 무시하고 새로 불러옴 */
-const VER='24';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
+const VER='25';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
 /* STAR POST */
 const $=s=>document.querySelector(s);
 const R=Math.PI/180,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -85,7 +85,7 @@ function frame(ts){if(!$('#sky').classList.contains('show')){requestAnimationFra
  if(best!==S.cur){S.cur=best;showCon(best)}
  g.globalCompositeOperation='lighter';for(const s of STARS){if(s.v[2]<-.02)continue;const p=proj(s.v);if(!p||p[0]<-10||p[0]>W+10||p[1]<-10||p[1]>H+10)continue;drawStar(g,p[0],p[1],s.mag,s.ci,t,s.ph)}g.globalCompositeOperation='source-over';g.globalAlpha=1;
  const cxw=-Rs[2],cyw=-Rs[5],czw=-Rs[8],az=(Math.atan2(cxw,cyw)/R+360)%360,alt=Math.asin(clamp(czw,-1,1))/R;
- if((fc++)%12===0)$('#hudDir').textContent=`${DIRS[Math.round(az/45)%8]} ${az.toFixed(0)}° · 고도 ${alt.toFixed(0)}°${S.mode==='manual'?' · 수동':''}${Math.abs(S.fov-66)>.5?` · 시야 ${S.fov.toFixed(0)}°`:''}`;
+ if((fc++)%12===0)$('#hudDir').textContent=`${DIRS[Math.round(az/45)%8]} ${az.toFixed(0)}° · 고도 ${alt.toFixed(0)}°${S.mode==='manual'?' · 수동':''}${` · 시야 ${S.fov.toFixed(0)}°`}`;
  if(!$('#machine').hidden)drawPreview();
  requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
