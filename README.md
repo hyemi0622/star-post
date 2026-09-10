@@ -10,7 +10,7 @@
 
 ## 배포 주소
 - https://hyemi0622.github.io/star-post/ (저장소: https://github.com/hyemi0622/star-post)
-- 수정 후 `git add -A && git commit -m "..." && git push` 하면 1~2분 뒤 반영됩니다. 폰에서 옛 화면이 보이면 주소 뒤에 `?v=숫자`를 붙여 새로고침하세요.
+- 수정 후 `git add -A && git commit -m "..." && git push` 하면 1~2분 뒤 반영됩니다. 배포할 때 `version.txt`의 숫자와 `app.js` 맨 위 `VER`, index.html의 `?v=` 를 같이 올리면 폰이 자동으로 새 버전을 불러옵니다.
 
 ## GitHub Pages 배포(처음 설정용, 이미 완료)
 1. GitHub에서 새 저장소 생성 (예: `starpost`)
