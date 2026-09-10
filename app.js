@@ -123,9 +123,9 @@ const GO='"Apple SD Gothic Neo","Noto Sans KR",Inter,sans-serif';
 function renderCard(exp){const k=3,CW=300,CH=449;pcc.width=CW*k;pcc.height=CH*k;const o=pg;o.setTransform(k,0,0,k,0,0);
  if(IMG.postcard.complete&&IMG.postcard.naturalWidth)o.drawImage(IMG.postcard,0,0,CW,CH);else{o.fillStyle='#d9cbaa';o.fillRect(0,0,CW,CH);IMG.postcard.onload=()=>renderCard()}
  const ink='#1f2a44';
- const w=$('#pcWith').value.trim();if(w)vtext(o,w,31,56,`500 12px ${GO}`,ink,64);
- const lines=wrap(o,$('#pcMsg').value,`12px ${GO}`,140,3);lines.forEach((t,i)=>vtext(o,t,92+i*25,260,`12px ${GO}`,ink));
- const at=$('#pcWhere').value.trim(),on=dateText();vtext(o,`at ${at||'-'}  ·  on ${on}`,167,260,`10px ${GO}`,ink,140);
+ const w=$('#pcWith').value.trim();if(w)vtext(o,w,30,56,`500 11px ${GO}`,ink,64);
+ const lines=wrap(o,$('#pcMsg').value,`11px ${GO}`,140,3);lines.forEach((t,i)=>vtext(o,t,91.5+i*25,260,`11px ${GO}`,ink));
+ const at=$('#pcWhere').value.trim(),on=dateText();vtext(o,`at ${at||'-'}  ·  on ${on}`,166.5,260,`9px ${GO}`,ink,140);
  if(S.stamps.length&&IMG.seal.complete){o.save();o.globalAlpha=.9;o.translate(249.5,401);o.rotate(8*R);o.drawImage(IMG.seal,-26,-26,52,51);o.restore()}
  S.stamps.forEach((s,i)=>{const im=getImg(s.img);if(!(im.complete&&im.naturalWidth))return;o.save();o.translate(s.x,s.y);o.rotate(s.rot*R);o.shadowColor='rgba(0,0,0,.25)';o.shadowBlur=3;o.shadowOffsetY=1;o.drawImage(im,-29,-42,58,84);o.restore();
   if(!exp&&i===selIdx){o.save();o.strokeStyle='rgba(39,39,39,.9)';o.lineWidth=1;o.setLineDash([3,2]);o.strokeRect(s.x-44,s.y-31,88,62);o.setLineDash([]);o.fillStyle='#272727';o.beginPath();o.arc(s.x-44,s.y-31,9,0,7);o.fill();o.strokeStyle='#fff';o.lineWidth=1.6;o.beginPath();o.moveTo(s.x-48,s.y-35);o.lineTo(s.x-40,s.y-27);o.moveTo(s.x-40,s.y-35);o.lineTo(s.x-48,s.y-27);o.stroke();o.restore()}})}
