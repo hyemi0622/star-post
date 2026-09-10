@@ -1,5 +1,5 @@
 /* 자동 업데이트: 배포된 버전이 다르면 캐시 무시하고 새로 불러옴 */
-const VER='22';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
+const VER='23';fetch('version.txt?_='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(v=>{v=v.trim();if(v&&v!==VER&&!/reloaded/.test(location.search))location.replace(location.pathname+'?v='+v+'&reloaded=1')}).catch(()=>{});
 /* STAR POST */
 const $=s=>document.querySelector(s);
 const R=Math.PI/180,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -48,8 +48,9 @@ function rotM(a,b,g){a*=R;b*=R;g*=R;const cA=Math.cos(a),sA=Math.sin(a),cB=Math.
 let Rt=rotM(0,90,0),Rs=Rt.slice();
 let aOff=null;const wrap180=d=>((d+540)%360)-180;
 function onOri(e){if(e.alpha==null)return;let a=e.alpha;
- if(e.webkitCompassHeading!=null&&e.webkitCompassHeading>=0){const tgt=wrap180(360-e.webkitCompassHeading-e.alpha);if(aOff==null)aOff=tgt;else if(Math.abs(e.beta)<55&&Math.abs(e.gamma)<45)aOff+=wrap180(tgt-aOff)*.04;a=e.alpha+aOff}
+ if(e.webkitCompassHeading!=null&&e.webkitCompassHeading>=0){const tgt=wrap180(360-e.webkitCompassHeading-e.alpha),acc=e.webkitCompassAccuracy==null?30:e.webkitCompassAccuracy,ok=acc>=0&&acc<25&&Math.abs(e.beta)<40&&Math.abs(e.gamma)<30;if(aOff==null)aOff=tgt;else if(ok)aOff+=wrap180(tgt-aOff)*.01;a=e.alpha+aOff}
  Rt=rotM(a+S.off,e.beta,e.gamma);if(S.mode!=='sensor'){S.mode='sensor';$('#sensorBtn').hidden=true;$('#hint').classList.add('off')}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)aOff=null});
 function setManual(){if(S.mode==='sensor')return;S.mode='manual';Rt=rotM(-S.az,90+S.alt,0);$('#hint').textContent='화면을 드래그해서 하늘을 둘러보세요';$('#hint').classList.remove('off');if(window.DeviceOrientationEvent?.requestPermission)$('#sensorBtn').hidden=false}
 let sensorsInit=false;
 function initSensors(){if(sensorsInit)return;sensorsInit=true;let abs=false;if('ondeviceorientationabsolute' in window)addEventListener('deviceorientationabsolute',e=>{if(e.alpha!=null){abs=true;onOri(e)}});
