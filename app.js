@@ -99,11 +99,11 @@ function makeStamp(){const r=holeRect(),k=2,Wi=225*k,Hi=327*k,out=document.creat
  o.globalCompositeOperation='destination-in';o.drawImage(IMG.stamp,0,0,Wi,Hi);o.globalCompositeOperation='multiply';o.globalAlpha=.35;o.drawImage(IMG.stamp,0,0,Wi,Hi);o.globalCompositeOperation='source-over';o.globalAlpha=1;
  return out.toDataURL('image/png')}
 $('#nClose').onclick=()=>$('#naming').classList.remove('show');
-$('#nSave').onclick=()=>{if(!pending)return;pending.name=$('#nName').value.trim()||pending.ko;S.stamps.push(pending);if(!store.set('sp_stamps2',S.stamps))alert('저장 공간이 가득 찼어요. 엽서를 이미지로 저장한 뒤 우표를 몇 개 떼어 주세요.');pending=null;$('#naming').classList.remove('show');renderMini();openPost()};
+$('#nSave').onclick=()=>{if(!pending)return;pending.name=$('#nName').value.trim()||pending.ko;const sl=SLOTS[S.stamps.length]||SLOTS[5];pending.x=sl[0];pending.y=sl[1];pending.rot=sl[2];S.stamps.push(pending);if(!store.set('sp_stamps2',S.stamps))alert('저장 공간이 가득 찼어요. 엽서를 이미지로 저장한 뒤 우표를 몇 개 떼어 주세요.');pending=null;$('#naming').classList.remove('show');renderMini();openPost()};
 
 /* 엽서 만들기 카드의 미니 우표 (시안 좌표: 카드 기준 108,730) */
 const MINI=[[229,756.1,-1.39],[256.57,743,1.71],[287.59,745.79,16.49],[271.24,758.01,-1.85],[205,743.62,9.61],[186,748.42,9.61]];
-function renderMini(){const box=$('#miniStamps');box.innerHTML='';MINI.forEach((m,i)=>{const s=S.stamps[i],im=new Image();im.src=s?s.img:'img/stamp.png';im.style.cssText=`left:${m[0]-108}px;top:${m[1]-730}px;transform:rotate(${m[2]}deg)`;box.appendChild(im)})}
+function renderMini(){const box=$('#miniStamps');box.innerHTML='';MINI.forEach((m,i)=>{const s=S.stamps[i];if(!s)return;const im=new Image();im.src=s.img;im.style.cssText=`left:${m[0]-108}px;top:${m[1]-730}px;transform:rotate(${m[2]}deg)`;box.appendChild(im)})}
 
 /* ---- 엽서 (캔버스, 300x449 시안 좌표) ---- */
 const PC=store.get('sp_pc',{});$('#pcWith').value=PC.with||'';$('#pcWhere').value=PC.where||'';$('#pcMsg').value=PC.msg||'';
@@ -116,21 +116,28 @@ const pcc=$('#pcCanvas'),pg=pcc.getContext('2d');
 const SLOTS=[[81,131,90],[179,131,97.14],[81,202,90],[179,202,90],[81,274,90],[179,274,83.23]];
 function vtext(o,txt,x,y,font,color,maxW){o.save();o.translate(x,y);o.rotate(Math.PI/2);o.font=font;o.fillStyle=color;o.textBaseline='alphabetic';if(maxW)o.fillText(txt,0,0,maxW);else o.fillText(txt,0,0);o.restore()}
 function wrap(o,txt,font,maxW,maxLines){o.font=font;const lines=[];let cur='';for(const ch of txt){const t=cur+ch;if(o.measureText(t).width>maxW&&cur){lines.push(cur);cur=ch}else cur=t}if(cur)lines.push(cur);return lines.slice(0,maxLines)}
-function renderCard(){const k=3,CW=300,CH=449;pcc.width=CW*k;pcc.height=CH*k;const o=pg;o.setTransform(k,0,0,k,0,0);
- if(IMG.postcard.complete&&IMG.postcard.naturalWidth)o.drawImage(IMG.postcard,0,0,CW,CH);else{o.fillStyle='#d9cbaa';o.fillRect(0,0,CW,CH);IMG.postcard.onload=renderCard}
- S.stamps.forEach((s,i)=>{const[x,y,rot]=SLOTS[i]||SLOTS[5];const im=getImg(s.img);if(!(im.complete&&im.naturalWidth))return;o.save();o.translate(x,y);o.rotate(rot*R);o.shadowColor='rgba(0,0,0,.25)';o.shadowBlur=3;o.shadowOffsetY=1;o.drawImage(im,-29,-42,58,84);o.restore()});
- const ink='#1f2a44',pen='"Nanum Pen Script",cursive';
- const w=$('#pcWith').value.trim();if(w)vtext(o,w,31,56,`16px ${pen}`,ink,64);
- const lines=wrap(o,$('#pcMsg').value,`16px ${pen}`,140,3);lines.forEach((t,i)=>vtext(o,t,91+i*25,260,`16px ${pen}`,ink));
- const at=$('#pcWhere').value.trim(),on=dateText();vtext(o,`at ${at||'-'}  ·  on ${on}`,166,260,`13px ${pen}`,ink,140);
- if(S.stamps.length&&IMG.seal.complete){o.save();o.globalAlpha=.9;o.translate(249.5,401);o.rotate(8*R);o.drawImage(IMG.seal,-26,-26,52,51);o.restore()}}
-function openPost(){$('#pcDate').textContent=dateText();$('#sky').classList.remove('show');$('#postcard').classList.add('show');document.fonts.load('16px "Nanum Pen Script"').then(renderCard,renderCard);renderCard()}
+let selIdx=-1;
+S.stamps.forEach((s,i)=>{if(s.x==null){const sl=SLOTS[i]||SLOTS[5];s.x=sl[0];s.y=sl[1];s.rot=sl[2]}});
+const GO='"Apple SD Gothic Neo","Noto Sans KR",Inter,sans-serif';
+function renderCard(exp){const k=3,CW=300,CH=449;pcc.width=CW*k;pcc.height=CH*k;const o=pg;o.setTransform(k,0,0,k,0,0);
+ if(IMG.postcard.complete&&IMG.postcard.naturalWidth)o.drawImage(IMG.postcard,0,0,CW,CH);else{o.fillStyle='#d9cbaa';o.fillRect(0,0,CW,CH);IMG.postcard.onload=()=>renderCard()}
+ const ink='#1f2a44';
+ const w=$('#pcWith').value.trim();if(w)vtext(o,w,31,56,`500 12px ${GO}`,ink,64);
+ const lines=wrap(o,$('#pcMsg').value,`12px ${GO}`,140,3);lines.forEach((t,i)=>vtext(o,t,92+i*25,260,`12px ${GO}`,ink));
+ const at=$('#pcWhere').value.trim(),on=dateText();vtext(o,`at ${at||'-'}  ·  on ${on}`,167,260,`10px ${GO}`,ink,140);
+ if(S.stamps.length&&IMG.seal.complete){o.save();o.globalAlpha=.9;o.translate(249.5,401);o.rotate(8*R);o.drawImage(IMG.seal,-26,-26,52,51);o.restore()}
+ S.stamps.forEach((s,i)=>{const im=getImg(s.img);if(!(im.complete&&im.naturalWidth))return;o.save();o.translate(s.x,s.y);o.rotate(s.rot*R);o.shadowColor='rgba(0,0,0,.25)';o.shadowBlur=3;o.shadowOffsetY=1;o.drawImage(im,-29,-42,58,84);o.restore();
+  if(!exp&&i===selIdx){o.save();o.strokeStyle='rgba(39,39,39,.9)';o.lineWidth=1;o.setLineDash([3,2]);o.strokeRect(s.x-44,s.y-31,88,62);o.setLineDash([]);o.fillStyle='#272727';o.beginPath();o.arc(s.x-44,s.y-31,9,0,7);o.fill();o.strokeStyle='#fff';o.lineWidth=1.6;o.beginPath();o.moveTo(s.x-48,s.y-35);o.lineTo(s.x-40,s.y-27);o.moveTo(s.x-40,s.y-35);o.lineTo(s.x-48,s.y-27);o.stroke();o.restore()}})}
+function openPost(){$('#pcDate').textContent=dateText();$('#sky').classList.remove('show');$('#postcard').classList.add('show');selIdx=-1;renderCard()}
 $('#postBtn').onclick=openPost;$('#pcBack').onclick=()=>{$('#postcard').classList.remove('show');$('#sky').classList.add('show');renderMini()};
-/* 엽서 탭 → 글쓰기 시트 / 우표 길게 누르기 → 떼기 */
-(function(){let tm,long=false;const hit=e=>{const b=pcc.getBoundingClientRect(),p=e.touches?e.touches[0]:e,x=(p.clientX-b.left)/b.width*300,y=(p.clientY-b.top)/b.height*449;return SLOTS.findIndex((s,i)=>S.stamps[i]&&Math.abs(x-s[0])<42&&Math.abs(y-s[1])<29)};
- const st=e=>{long=false;const i=hit(e);if(i<0)return;tm=setTimeout(()=>{long=true;if(confirm(`'${S.stamps[i].name}' 우표를 뗄까요?`)){S.stamps.splice(i,1);store.set('sp_stamps2',S.stamps);$('#pcDate').textContent=dateText();renderCard()}},600)},en=()=>clearTimeout(tm);
- pcc.addEventListener('touchstart',st,{passive:true});pcc.addEventListener('touchend',en);pcc.addEventListener('touchmove',en);pcc.addEventListener('mousedown',st);pcc.addEventListener('mouseup',en);pcc.addEventListener('contextmenu',e=>e.preventDefault());
- pcc.addEventListener('click',()=>{if(long)return;$('#sheet').hidden=false;$('#pcMsg').focus()});$('#sheetDone').onclick=()=>{$('#sheet').hidden=true}})();
-$('#pcSave').onclick=()=>{$('#sheet').hidden=true;renderCard();$('#pvImg').src=pcc.toDataURL('image/png');$('#preview').classList.add('show')};
+/* 우표 탭=선택(좌상단 X로 삭제), 드래그=이동, 빈 곳 탭=글쓰기 시트 */
+(function(){let drag=null,moved=false;const pos=e=>{const b=pcc.getBoundingClientRect();return[(e.clientX-b.left)/b.width*300,(e.clientY-b.top)/b.height*449]};
+ const hit=(x,y)=>{for(let i=S.stamps.length-1;i>=0;i--){const s=S.stamps[i];if(Math.abs(x-s.x)<42&&Math.abs(y-s.y)<29)return i}return -1};
+ pcc.addEventListener('pointerdown',e=>{const[x,y]=pos(e);moved=false;if(selIdx>=0){const s=S.stamps[selIdx];if(Math.hypot(x-(s.x-44),y-(s.y-31))<13){S.stamps.splice(selIdx,1);selIdx=-1;store.set('sp_stamps2',S.stamps);$('#pcDate').textContent=dateText();renderCard();drag=null;return}}
+  const i=hit(x,y);if(i>=0){selIdx=i;drag={i,dx:S.stamps[i].x-x,dy:S.stamps[i].y-y};pcc.setPointerCapture(e.pointerId)}else{selIdx=-1;drag=null;$('#sheet').hidden=false;$('#pcMsg').focus()}renderCard()});
+ pcc.addEventListener('pointermove',e=>{if(!drag)return;const[x,y]=pos(e),s=S.stamps[drag.i];const nx=clamp(x+drag.dx,42,258),ny=clamp(y+drag.dy,29,420);if(Math.hypot(nx-s.x,ny-s.y)>1)moved=true;s.x=nx;s.y=ny;renderCard()});
+ const up=()=>{if(drag&&moved)store.set('sp_stamps2',S.stamps);drag=null};pcc.addEventListener('pointerup',up);pcc.addEventListener('pointercancel',up);pcc.addEventListener('contextmenu',e=>e.preventDefault());
+ $('#sheetDone').onclick=()=>{$('#sheet').hidden=true}})();
+$('#pcSave').onclick=()=>{$('#sheet').hidden=true;selIdx=-1;renderCard(true);$('#pvImg').src=pcc.toDataURL('image/png');$('#preview').classList.add('show')};
 $('#pvClose').onclick=()=>$('#preview').classList.remove('show');
 renderMini();
