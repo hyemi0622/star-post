@@ -13,7 +13,7 @@
 <title>STAR POST</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 <div id="app">
@@ -53,10 +53,9 @@
   </div>
 </section>
 
-<div id="naming" class="overlay"><div class="stage tall">
+<div id="naming" class="overlay"><div class="stage">
   <button class="back" id="nClose">←</button>
-  <img id="nImg" alt="우표">
-  <img id="nSeal" src="img/seal.png" alt="">
+  <div class="n-stamp"><img id="nImg" alt="우표"><img id="nSeal" src="img/seal.png" alt=""></div>
   <input id="nName" type="text" placeholder="이름을 입력해 주세요." maxlength="20" autocomplete="off">
   <div class="n-line"></div>
   <div class="n-date" id="nDate"></div>
@@ -64,10 +63,10 @@
   <button id="nSave" class="btn dark">확인</button>
 </div></div>
 
-<section id="postcard" class="screen"><div class="scroll"><div class="stage tall">
+<section id="postcard" class="screen"><div class="scroll"><div class="stage">
   <button class="back" id="pcBack">←</button>
   <canvas id="pcCanvas"></canvas>
-  <p class="pc-hint2">엽서를 누르면 글쓰기 · 우표를 누르면 옮기기 · 크기 · 지우기</p>
+  <p class="pc-hint2">줄을 누르면 글쓰기 · 우표를 누르면 옮기기 · 크기 · 지우기</p>
   <button id="pcSave" class="btn dark">이미지 저장하기</button>
 </div></div>
   <div id="sheet" hidden>
@@ -86,6 +85,6 @@
 
 </div>
 <script src="data/sky.js?v=2"></script>
-<script src="app.js?v=17"></script>
+<script src="app.js?v=18"></script>
 </body>
 </html>
