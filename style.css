@@ -80,7 +80,7 @@ h1{position:absolute;left:0;right:0;top:294px;font-weight:800;font-size:30px;lin
 #postcard{background:#fff;color:#272727;text-align:center}
 #pcCanvas{position:absolute;left:50%;margin-left:-150px;top:128px;width:300px;height:449px;touch-action:none}
 .pc-hint{display:none;font-size:12px;font-weight:500;line-height:25px;color:#6d6d6d}
-.pc-hint2{position:absolute;left:0;right:0;top:669px;font-size:12px;font-weight:500;line-height:25px;letter-spacing:-.4px;color:#6d6d6d}
+.pc-hint2{position:absolute;left:0;right:0;top:712px;font-size:12px;font-weight:500;line-height:25px;letter-spacing:-.4px;color:#6d6d6d}
 #pcSave{top:744px}
 #sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -6px 30px rgba(0,0,0,.18);padding:18px 21px 20px;text-align:left;z-index:12}
 #sheet label{display:flex;align-items:center;gap:10px;border-bottom:1px solid #e3e3e3;padding:9px 2px}
