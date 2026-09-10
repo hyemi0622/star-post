@@ -10,7 +10,6 @@ document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 let lastT=0;document.addEventListener('touchend',e=>{const t=Date.now();if(t-lastT<300&&!e.target.closest('input'))e.preventDefault();lastT=t},{passive:false});
-if(/KAKAOTALK/i.test(navigator.userAgent)){const a=$('#kakaoOut');a.hidden=false;a.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href)}
 let HS=844,K=1,mSc=1,mTop=166;
 function setScale(){const w=window.visualViewport?.width||document.documentElement.clientWidth||innerWidth,vh=window.visualViewport?.height||innerHeight;K=Math.min(1.25,w/390);HS=vh/K;const app=document.getElementById('app');app.style.setProperty('--k',K.toFixed(4));app.style.setProperty('--hs',Math.ceil(HS)+'px');layoutMachine()}
 function resetZoom(){const vv=window.visualViewport;if(vv&&vv.scale>1.01){const m=document.querySelector('meta[name=viewport]'),o=m.content;m.content=o+', maximum-scale=1.0';setTimeout(()=>m.content=o,60)}}
@@ -151,17 +150,28 @@ function renderCard(exp){const k=3,CW=300,CH=449;pcc.width=CW*k;pcc.height=CH*k;
  const lines=wrap(o,$('#pcMsg').value,`11px ${GO}`,140,3);lines.forEach((t,i)=>vtext(o,t,91.5+i*25,260,`11px ${GO}`,ink));
  const at=$('#pcWhere').value.trim(),on=dateText();vtext(o,`at ${at||'-'}  ·  on ${on}`,166.5,260,`9px ${GO}`,ink,140);
  if(S.stamps.length&&IMG.seal.complete){o.save();o.globalAlpha=.9;o.translate(249.5,401);o.rotate(8*R);o.drawImage(IMG.seal,-26,-26,52,51);o.restore()}
- S.stamps.forEach((s,i)=>{const im=getImg(s.img);if(!(im.complete&&im.naturalWidth))return;o.save();o.translate(s.x,s.y);o.rotate(s.rot*R);o.shadowColor='rgba(0,0,0,.25)';o.shadowBlur=3;o.shadowOffsetY=1;o.drawImage(im,-29,-42,58,84);o.restore();
-  if(!exp&&i===selIdx){o.save();o.strokeStyle='rgba(39,39,39,.9)';o.lineWidth=1;o.setLineDash([3,2]);o.strokeRect(s.x-44,s.y-31,88,62);o.setLineDash([]);o.fillStyle='#272727';o.beginPath();o.arc(s.x-44,s.y-31,9,0,7);o.fill();o.strokeStyle='#fff';o.lineWidth=1.6;o.beginPath();o.moveTo(s.x-48,s.y-35);o.lineTo(s.x-40,s.y-27);o.moveTo(s.x-40,s.y-35);o.lineTo(s.x-48,s.y-27);o.stroke();o.restore()}})}
+ S.stamps.forEach((s,i)=>{const im=getImg(s.img),c=s.sc||1;if(!(im.complete&&im.naturalWidth))return;o.save();o.translate(s.x,s.y);o.rotate(s.rot*R);o.shadowColor='rgba(0,0,0,.25)';o.shadowBlur=3;o.shadowOffsetY=1;o.drawImage(im,-29*c,-42*c,58*c,84*c);o.restore();
+  if(!exp&&i===selIdx){const hw=44*c,hh=31*c;o.save();o.strokeStyle='rgba(39,39,39,.9)';o.lineWidth=1;o.setLineDash([3,2]);o.strokeRect(s.x-hw,s.y-hh,hw*2,hh*2);o.setLineDash([]);
+   o.fillStyle='#272727';o.beginPath();o.arc(s.x-hw,s.y-hh,9,0,7);o.fill();o.strokeStyle='#fff';o.lineWidth=1.6;o.beginPath();o.moveTo(s.x-hw-4,s.y-hh-4);o.lineTo(s.x-hw+4,s.y-hh+4);o.moveTo(s.x-hw+4,s.y-hh-4);o.lineTo(s.x-hw-4,s.y-hh+4);o.stroke();
+   o.fillStyle='#fff';o.beginPath();o.arc(s.x+hw,s.y+hh,9,0,7);o.fill();o.strokeStyle='#272727';o.lineWidth=1.2;o.stroke();o.beginPath();o.moveTo(s.x+hw-4,s.y+hh+4);o.lineTo(s.x+hw+4,s.y+hh-4);o.moveTo(s.x+hw+1,s.y+hh-4);o.lineTo(s.x+hw+4,s.y+hh-4);o.lineTo(s.x+hw+4,s.y+hh-1);o.moveTo(s.x+hw-4,s.y+hh+1);o.lineTo(s.x+hw-4,s.y+hh+4);o.lineTo(s.x+hw-1,s.y+hh+4);o.stroke();o.restore()}})}
 function openPost(){$('#pcDate').textContent=dateText();$('#sky').classList.remove('show');$('#postcard').classList.add('show');selIdx=-1;renderCard()}
 $('#postBtn').onclick=openPost;$('#pcBack').onclick=()=>{$('#postcard').classList.remove('show');$('#sky').classList.add('show');renderMini()};
-/* 우표 탭=선택(좌상단 X로 삭제), 드래그=이동, 빈 곳 탭=글쓰기 시트 */
-(function(){let drag=null,moved=false;const pos=e=>{const b=vrect(pcc);return[(e.clientX-b.left)/b.width*300,(e.clientY-b.top)/b.height*449]};
- const hit=(x,y)=>{for(let i=S.stamps.length-1;i>=0;i--){const s=S.stamps[i];if(Math.abs(x-s.x)<42&&Math.abs(y-s.y)<29)return i}return -1};
- pcc.addEventListener('pointerdown',e=>{const[x,y]=pos(e);moved=false;if(selIdx>=0){const s=S.stamps[selIdx];if(Math.hypot(x-(s.x-44),y-(s.y-31))<13){S.stamps.splice(selIdx,1);selIdx=-1;store.set('sp_stamps2',S.stamps);$('#pcDate').textContent=dateText();renderCard();drag=null;return}}
-  const i=hit(x,y);if(i>=0){selIdx=i;drag={i,dx:S.stamps[i].x-x,dy:S.stamps[i].y-y};pcc.setPointerCapture(e.pointerId)}else{selIdx=-1;drag=null;$('#sheet').hidden=false;$('#pcMsg').focus()}renderCard()});
- pcc.addEventListener('pointermove',e=>{if(!drag)return;const[x,y]=pos(e),s=S.stamps[drag.i];const nx=clamp(x+drag.dx,42,258),ny=clamp(y+drag.dy,29,420);if(Math.hypot(nx-s.x,ny-s.y)>1)moved=true;s.x=nx;s.y=ny;renderCard()});
- const up=()=>{if(drag&&moved)store.set('sp_stamps2',S.stamps);drag=null};pcc.addEventListener('pointerup',up);pcc.addEventListener('pointercancel',up);pcc.addEventListener('contextmenu',e=>e.preventDefault());
+/* 우표 탭=선택(좌상단 X 삭제, 우하단 손잡이 크기), 드래그=이동, 두 손가락=크기, 빈 곳 탭=글쓰기 */
+(function(){let drag=null,moved=false,pinch=null;const pos=e=>{const b=vrect(pcc);return[(e.clientX-b.left)/b.width*300,(e.clientY-b.top)/b.height*449]};
+ const hit=(x,y)=>{for(let i=S.stamps.length-1;i>=0;i--){const s=S.stamps[i],c=s.sc||1;if(Math.abs(x-s.x)<42*c&&Math.abs(y-s.y)<29*c)return i}return -1};
+ const save=()=>store.set('sp_stamps2',S.stamps);const setSc=(s,v)=>{s.sc=clamp(v,.5,2.4)};
+ pcc.addEventListener('pointerdown',e=>{if(pinch)return;const[x,y]=pos(e);moved=false;
+  if(selIdx>=0){const s=S.stamps[selIdx],c=s.sc||1,hw=44*c,hh=31*c;if(Math.hypot(x-(s.x-hw),y-(s.y-hh))<14){S.stamps.splice(selIdx,1);selIdx=-1;save();$('#pcDate').textContent=dateText();renderCard();drag=null;return}
+   if(Math.hypot(x-(s.x+hw),y-(s.y+hh))<14){drag={i:selIdx,mode:'scale',d0:Math.hypot(x-s.x,y-s.y),s0:c};pcc.setPointerCapture(e.pointerId);return}}
+  const i=hit(x,y);if(i>=0){selIdx=i;drag={i,mode:'move',dx:S.stamps[i].x-x,dy:S.stamps[i].y-y};pcc.setPointerCapture(e.pointerId)}else{selIdx=-1;drag=null;$('#sheet').hidden=false;$('#pcMsg').focus()}renderCard()});
+ pcc.addEventListener('pointermove',e=>{if(!drag||pinch)return;const[x,y]=pos(e),s=S.stamps[drag.i];if(!s)return;
+  if(drag.mode==='scale'){setSc(s,drag.s0*Math.hypot(x-s.x,y-s.y)/Math.max(1,drag.d0));moved=true}
+  else{const c=s.sc||1,nx=clamp(x+drag.dx,30*c,300-30*c),ny=clamp(y+drag.dy,20*c,449-20*c);if(Math.hypot(nx-s.x,ny-s.y)>1)moved=true;s.x=nx;s.y=ny}renderCard()});
+ const up=()=>{if(drag&&moved)save();drag=null};pcc.addEventListener('pointerup',up);pcc.addEventListener('pointercancel',up);pcc.addEventListener('contextmenu',e=>e.preventDefault());
+ const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+ pcc.addEventListener('touchstart',e=>{if(e.touches.length===2&&selIdx>=0){pinch={d:dist(e.touches),s0:S.stamps[selIdx].sc||1};drag=null}},{passive:true});
+ pcc.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2&&selIdx>=0){e.preventDefault();setSc(S.stamps[selIdx],pinch.s0*dist(e.touches)/pinch.d);renderCard()}},{passive:false});
+ pcc.addEventListener('touchend',e=>{if(pinch&&e.touches.length<2){pinch=null;save()}});
  $('#sheetDone').onclick=()=>{$('#sheet').hidden=true}})();
 $('#pcSave').onclick=()=>{$('#sheet').hidden=true;selIdx=-1;renderCard(true);$('#pvImg').src=pcc.toDataURL('image/png');$('#preview').classList.add('show')};
 $('#pvClose').onclick=()=>$('#preview').classList.remove('show');

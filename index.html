@@ -10,7 +10,7 @@
 <title>STAR POST</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 <div id="app">
@@ -18,7 +18,6 @@
 <section id="onboard" class="screen show"><div class="stage">
   <h1>★ STAR POST ★</h1>
   <p class="ob-desc">도시의 밤에도 하늘엔 별이 있어요.<br>핸드폰을 하늘로 들어 올리면 지금 그 자리에<br>숨어있는 별들이 보여요.<br><br>오늘 밤, 자신의 별자리도 찾아보아요.</p>
-  <a id="kakaoOut" class="kakao-out" hidden>카카오톡에서는 카메라·센서가 제한돼요. 외부 브라우저로 열기 →</a>
   <button id="startBtn" class="btn white">하늘 보러 가기</button>
   <p class="ob-hint">위치 · 방향 센서 권한을 허용해 주세요.</p>
 </div></section>
@@ -65,7 +64,7 @@
   <button class="back" id="pcBack">←</button>
   <canvas id="pcCanvas"></canvas>
   <div class="spacer"></div>
-  <p class="pc-hint2">엽서를 누르면 글을 쓰고, 우표를 누르면 옮기거나 지울 수 있어요</p>
+  <p class="pc-hint2">엽서를 누르면 글쓰기 · 우표를 누르면 옮기기 · 크기 · 지우기</p>
   <button id="pcSave" class="btn dark">이미지 저장하기</button>
   <div id="sheet" hidden>
     <label><span>with</span><input id="pcWith" type="text" placeholder="누구와 봤나요" maxlength="24"></label>
@@ -83,6 +82,6 @@
 
 </div>
 <script src="data/sky.js?v=2"></script>
-<script src="app.js?v=12"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>
